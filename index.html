@@ -942,7 +942,7 @@
   <p style="margin-top: 1rem;">You'll receive a confirmation text with pickup details or delivery information.</p>
   <div class="contact-info" style="margin-top: 1.5rem;">
     <p><strong>Email:</strong> <a href="mailto:thedailybatchbakery@gmail.com">thedailybatchbakery@gmail.com</a></p>
-    <p><strong>Text:</strong> <a href="sms:7025129694">Text Crosbie at (702) 512-9694</a></p>
+    <p><strong>Text:</strong> <a href="sms:7025129594">Text Crosbie at (702) 512-9594</a></p>
   </div>
   <p style="margin-top: 1.5rem;"><strong>Delivery:</strong> Orders can be picked up in person or delivered. Delivery fee is $10. Free delivery for orders over $100! Minimum order of $40 for delivery. Minimum 2 days advance notice required.</p>
 </section>
@@ -951,7 +951,7 @@
   <h2>Contact Us</h2>
   <div class="contact-info">
     <p><strong>Email:</strong> <a href="mailto:thedailybatchbakery@gmail.com">thedailybatchbakery@gmail.com</a></p>
-    <p><strong>Phone:</strong> <a href="sms:7025129694">Text Crosbie at (702) 512-9694</a></p>
+    <p><strong>Phone:</strong> <a href="sms:7025129594">Text Crosbie at (702) 512-9594</a></p>
     <p><strong>Venmo:</strong> @Crosbie-Bohannon</p>
   </div>
 </section>
@@ -1011,7 +1011,7 @@
   <div class="modal-container">
     <button class="close-modal" onclick="closeLogin()">&times;</button>
     <h2>Login</h2>
-    <p style="margin-bottom: 1rem; color: #666;">Enter your phone number or email to continue</p>
+    <p style="margin-bottom: 1rem; color: #666;">Enter your phone number to continue</p>
 
     <div class="error" id="loginError" style="display: none; margin-bottom: 1rem; padding: 1rem; background: #f8d7da; color: #721c24; border-radius: 5px;">
       Account not found. Please sign up first.
@@ -1234,11 +1234,15 @@
   // Save user to users list
   function saveUserToList(user) {
     let users = getAllUsers();
-    // Check if user already exists (by email or phone)
-    const existingIndex = users.findIndex(u => 
-      u.email.toLowerCase() === user.email.toLowerCase() || 
-      u.phone === user.phone
-    );
+    // Normalize phone number for comparison and storage
+    const normalizedPhone = user.phone.replace(/\D/g, '');
+    user.phone = normalizedPhone; // Ensure phone is stored in normalized format
+    
+    // Check if user already exists (by phone number - normalized)
+    const existingIndex = users.findIndex(u => {
+      const existingPhone = (u.phone || '').replace(/\D/g, '');
+      return existingPhone === normalizedPhone;
+    });
     
     if (existingIndex >= 0) {
       users[existingIndex] = user; // Update existing
@@ -1440,9 +1444,19 @@
   document.getElementById('loginForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
-    const phone = document.getElementById('loginPhone').value.trim();
+    let phone = document.getElementById('loginPhone').value.trim();
     
     if (!phone) {
+      document.getElementById('loginPhoneError').classList.add('show');
+      return;
+    }
+
+    // Normalize phone number (remove all non-digits)
+    phone = phone.replace(/\D/g, '');
+    
+    // Validate phone has at least 10 digits
+    if (phone.length < 10) {
+      document.getElementById('loginPhoneError').textContent = 'Please enter a valid phone number';
       document.getElementById('loginPhoneError').classList.add('show');
       return;
     }

@@ -803,9 +803,9 @@
 </nav>
 
 <div style="position: fixed; top: 1rem; left: 1rem; z-index: 1000;">
-  <div id="userStatusIndicator" style="display: none; background: #d4edda; color: #155724; padding: 0.75rem 1rem; border-radius: 5px; font-size: 0.9rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2); max-width: 300px; display: flex; align-items: center; gap: 0.75rem;">
+  <div id="userStatusIndicator" style="display: none; background: #d4edda; color: #155724; padding: 0.75rem 1rem; border-radius: 5px; font-size: 0.9rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2); max-width: 300px; align-items: center; gap: 0.75rem;">
     <span id="userStatusText"></span>
-    <button onclick="logout()" style="background: #b18458; color: white; border: none; padding: 0.25rem 0.75rem; border-radius: 3px; font-size: 0.8rem; cursor: pointer; white-space: nowrap;">Logout</button>
+    <button id="bannerLogoutBtn" onclick="logout()" style="background: #b18458; color: white; border: none; padding: 0.25rem 0.75rem; border-radius: 3px; font-size: 0.8rem; cursor: pointer; white-space: nowrap;">Logout</button>
   </div>
 </div>
 
@@ -1418,6 +1418,7 @@
     const checkoutForm = document.getElementById('checkoutForm');
     const userStatusIndicator = document.getElementById('userStatusIndicator');
     const userStatusText = document.getElementById('userStatusText');
+    const bannerLogoutBtn = document.getElementById('bannerLogoutBtn');
 
     if (currentUser) {
       loginPrompt.style.display = 'none';
@@ -1435,9 +1436,12 @@
       document.getElementById('customerPhoneInput').value = currentUser.phone;
       document.getElementById('customerZipInput').value = currentUser.zipcode;
       
-      // Update user status indicator
+      // Update user status indicator (show welcome banner and logout button)
       userStatusIndicator.style.display = 'flex';
       userStatusText.textContent = `Welcome back, ${currentUser.name}!`;
+      if (bannerLogoutBtn) {
+        bannerLogoutBtn.style.display = 'inline-block';
+      }
       
       // Update navigation (show logout, hide login/signup)
       document.getElementById('navLogin').style.display = 'none';
@@ -1448,8 +1452,11 @@
       userInfoDisplay.style.display = 'none';
       checkoutForm.style.display = 'none';
       
-      // Hide user status indicator
+      // Hide user status indicator and logout button
       userStatusIndicator.style.display = 'none';
+      if (bannerLogoutBtn) {
+        bannerLogoutBtn.style.display = 'none';
+      }
       
       // Update navigation (show login/signup, hide logout)
       document.getElementById('navLogin').style.display = 'inline-block';
@@ -1459,7 +1466,7 @@
   }
 
   // Sign Up Form Handler
-  document.getElementById('signupForm').addEventListener('submit', function(e) {
+  document.getElementById('signupForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     
     const name = document.getElementById('signupName').value.trim();

@@ -256,6 +256,175 @@
       text-decoration: underline;
     }
 
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 3000;
+      overflow-y: auto;
+    }
+
+    .modal.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .modal-container {
+      background: white;
+      border-radius: 10px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      position: relative;
+    }
+
+    .modal-container h2 {
+      margin-bottom: 1.5rem;
+      color: #b18458;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      font-size: 2rem;
+      cursor: pointer;
+      color: #666;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .close-modal:hover {
+      color: #b18458;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #d9a86c;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #b18458;
+    }
+
+    .form-group .error {
+      color: #dc3545;
+      font-size: 0.9rem;
+      margin-top: 0.25rem;
+      display: none;
+    }
+
+    .form-group .error.show {
+      display: block;
+    }
+
+    .zip-error-message {
+      display: none;
+      background: #f8d7da;
+      color: #721c24;
+      padding: 1rem;
+      border-radius: 5px;
+      margin-bottom: 1rem;
+      text-align: center;
+      border: 2px solid #f5c6cb;
+    }
+
+    .zip-error-message.show {
+      display: block;
+    }
+
+    .submit-btn {
+      width: 100%;
+      background: #b18458;
+      color: white;
+      border: none;
+      padding: 1rem;
+      border-radius: 5px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .submit-btn:hover {
+      background: #d9a86c;
+    }
+
+    .submit-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .success-message {
+      display: none;
+      background: #d4edda;
+      color: #155724;
+      padding: 1rem;
+      border-radius: 5px;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    .login-prompt {
+      text-align: center;
+      padding: 1rem;
+      background: #fff3cd;
+      border-radius: 5px;
+      margin-bottom: 1rem;
+    }
+
+    .login-prompt p {
+      margin-bottom: 0.5rem;
+    }
+
+    .link-btn {
+      background: none;
+      border: none;
+      color: #b18458;
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    .link-btn:hover {
+      color: #d9a86c;
+    }
+
     /* Cart Sidebar */
     .cart-overlay {
       display: none;
@@ -445,41 +614,6 @@
       color: #b18458;
     }
 
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: bold;
-      color: #333;
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: 0.75rem;
-      border: 2px solid #d9a86c;
-      border-radius: 5px;
-      font-size: 1rem;
-    }
-
-    .form-group input:focus {
-      outline: none;
-      border-color: #b18458;
-    }
-
-    .form-group .error {
-      color: #dc3545;
-      font-size: 0.9rem;
-      margin-top: 0.25rem;
-      display: none;
-    }
-
-    .form-group .error.show {
-      display: block;
-    }
-
     .order-summary {
       background: #faf7f2;
       padding: 1rem;
@@ -524,40 +658,16 @@
       margin: 0;
     }
 
-    .submit-order-btn {
-      width: 100%;
-      background: #b18458;
-      color: white;
-      border: none;
-      padding: 1rem;
-      border-radius: 5px;
-      font-size: 1.1rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .submit-order-btn:hover {
-      background: #d9a86c;
-    }
-
-    .submit-order-btn:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-    }
-
-    .success-message {
-      display: none;
+    .user-info-display {
       background: #d4edda;
-      color: #155724;
       padding: 1rem;
       border-radius: 5px;
       margin-bottom: 1rem;
-      text-align: center;
     }
 
-    .success-message.show {
-      display: block;
+    .user-info-display p {
+      margin: 0.25rem 0;
+      font-size: 0.9rem;
     }
 
     footer {
@@ -608,6 +718,7 @@
         right: -100%;
       }
 
+      .modal.show,
       .checkout-modal.show {
         padding: 1rem;
       }
@@ -740,6 +851,83 @@
   </div>
 </section>
 
+<!-- Sign Up Modal -->
+<div class="modal" id="signupModal">
+  <div class="modal-container">
+    <button class="close-modal" onclick="closeSignup()">&times;</button>
+    <h2>Create Account</h2>
+    <p style="margin-bottom: 1rem; color: #666;">Please sign up to place an order. We only deliver to Las Vegas, Nevada.</p>
+    
+    <div class="zip-error-message" id="zipError">
+      Sorry, we only deliver to Las Vegas, Nevada zip codes. Please enter a valid Las Vegas zip code.
+    </div>
+
+    <div class="success-message" id="signupSuccess">
+      Account created successfully! You can now proceed to checkout.
+    </div>
+
+    <form name="signup" netlify netlify-honeypot="bot-field" id="signupForm">
+      <input type="hidden" name="form-name" value="signup" />
+      <p style="display: none;">
+        <label>Don't fill this out: <input name="bot-field" /></label>
+      </p>
+
+      <div class="form-group">
+        <label for="signupName">Name *</label>
+        <input type="text" id="signupName" name="name" required>
+        <div class="error" id="signupNameError">Please enter your name</div>
+      </div>
+
+      <div class="form-group">
+        <label for="signupEmail">Email *</label>
+        <input type="email" id="signupEmail" name="email" required>
+        <div class="error" id="signupEmailError">Please enter a valid email address</div>
+      </div>
+
+      <div class="form-group">
+        <label for="signupPhone">Phone Number *</label>
+        <input type="tel" id="signupPhone" name="phone" required>
+        <div class="error" id="signupPhoneError">Please enter your phone number</div>
+      </div>
+
+      <div class="form-group">
+        <label for="signupZip">Zip Code *</label>
+        <input type="text" id="signupZip" name="zipcode" pattern="[0-9]{5}" maxlength="5" required>
+        <div class="error" id="signupZipError">Please enter a valid 5-digit zip code</div>
+      </div>
+
+      <button type="submit" class="submit-btn" id="signupSubmitBtn">Create Account</button>
+    </form>
+  </div>
+</div>
+
+<!-- Login Modal -->
+<div class="modal" id="loginModal">
+  <div class="modal-container">
+    <button class="close-modal" onclick="closeLogin()">&times;</button>
+    <h2>Login</h2>
+    <p style="margin-bottom: 1rem; color: #666;">Enter your phone number or email to continue</p>
+
+    <div class="error" id="loginError" style="display: none; margin-bottom: 1rem; padding: 1rem; background: #f8d7da; color: #721c24; border-radius: 5px;">
+      Account not found. Please sign up first.
+    </div>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="loginIdentifier">Phone Number or Email *</label>
+        <input type="text" id="loginIdentifier" required placeholder="Enter phone or email">
+        <div class="error" id="loginIdentifierError">Please enter your phone number or email</div>
+      </div>
+
+      <button type="submit" class="submit-btn" id="loginSubmitBtn">Login</button>
+    </form>
+
+    <p style="text-align: center; margin-top: 1rem;">
+      Don't have an account? <button class="link-btn" onclick="switchToSignup()">Sign up here</button>
+    </p>
+  </div>
+</div>
+
 <!-- Cart Sidebar -->
 <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
 <div class="cart-sidebar" id="cartSidebar">
@@ -766,7 +954,23 @@
     <div class="success-message" id="successMessage">
       Order submitted successfully! We'll contact you soon to confirm your order.
     </div>
-    <form name="order" netlify netlify-honeypot="bot-field" id="checkoutForm">
+
+    <div id="loginPrompt" class="login-prompt">
+      <p><strong>Please login or sign up to continue</strong></p>
+      <button class="link-btn" onclick="openLogin()">Login</button> or 
+      <button class="link-btn" onclick="openSignup()">Sign Up</button>
+    </div>
+
+    <div id="userInfoDisplay" class="user-info-display" style="display: none;">
+      <p><strong>Ordering as:</strong></p>
+      <p id="displayName"></p>
+      <p id="displayEmail"></p>
+      <p id="displayPhone"></p>
+      <p id="displayZip"></p>
+      <button class="link-btn" onclick="logout()" style="margin-top: 0.5rem;">Not you? Logout</button>
+    </div>
+
+    <form name="order" netlify netlify-honeypot="bot-field" id="checkoutForm" style="display: none;">
       <input type="hidden" name="form-name" value="order" />
       <p style="display: none;">
         <label>Don't fill this out: <input name="bot-field" /></label>
@@ -774,30 +978,16 @@
       
       <div class="order-summary" id="orderSummary"></div>
 
-      <div class="form-group">
-        <label for="customerName">Name *</label>
-        <input type="text" id="customerName" name="name" required>
-        <div class="error" id="nameError">Please enter your name</div>
-      </div>
-
-      <div class="form-group">
-        <label for="customerEmail">Email *</label>
-        <input type="email" id="customerEmail" name="email" required>
-        <div class="error" id="emailError">Please enter a valid email address</div>
-      </div>
-
-      <div class="form-group">
-        <label for="customerPhone">Phone Number *</label>
-        <input type="tel" id="customerPhone" name="phone" required>
-        <div class="error" id="phoneError">Please enter your phone number</div>
-      </div>
+      <input type="hidden" name="customerName" id="customerNameInput">
+      <input type="hidden" name="customerEmail" id="customerEmailInput">
+      <input type="hidden" name="customerPhone" id="customerPhoneInput">
+      <input type="hidden" name="customerZip" id="customerZipInput">
+      <input type="hidden" name="orderItems" id="orderItemsInput">
+      <input type="hidden" name="orderTotal" id="orderTotalInput">
 
       <div class="payment-placeholder">
         <p>💳 Online payments coming soon</p>
       </div>
-
-      <input type="hidden" name="orderItems" id="orderItemsInput">
-      <input type="hidden" name="orderTotal" id="orderTotalInput">
 
       <button type="submit" class="submit-order-btn" id="submitOrderBtn">Submit Order</button>
     </form>
@@ -809,8 +999,255 @@
 </footer>
 
 <script>
-  let cart = [];
+  // Las Vegas zip codes
+  const lasVegasZipCodes = [
+    '89030', '89031', '89032', '89044', '89052', '89074', '89081', '89084', '89086',
+    '89101', '89102', '89103', '89104', '89106', '89107', '89108', '89109', '89110',
+    '89111', '89112', '89113', '89114', '89115', '89117', '89118', '89119', '89120',
+    '89121', '89122', '89123', '89124', '89125', '89126', '89127', '89128', '89129',
+    '89130', '89131', '89134', '89135', '89136', '89137', '89138', '89139', '89140',
+    '89141', '89142', '89143', '89144', '89145', '89146', '89147', '89148', '89149',
+    '89150', '89151', '89152', '89153', '89154', '89155', '89156', '89157', '89158',
+    '89159', '89160', '89161', '89162', '89163', '89164', '89165', '89166', '89169',
+    '89170', '89173', '89177', '89178', '89179', '89180', '89183', '89185', '89191',
+    '89193', '89195', '89199'
+  ];
 
+  let cart = [];
+  let currentUser = null;
+
+  // Load user from localStorage
+  function loadUser() {
+    const userStr = localStorage.getItem('bakeryUser');
+    if (userStr) {
+      currentUser = JSON.parse(userStr);
+      updateUserDisplay();
+    }
+  }
+
+  // Save user to localStorage
+  function saveUser(user) {
+    localStorage.setItem('bakeryUser', JSON.stringify(user));
+    currentUser = user;
+  }
+
+  // Clear user from localStorage
+  function clearUser() {
+    localStorage.removeItem('bakeryUser');
+    currentUser = null;
+  }
+
+  // Load all users from localStorage (for lookup)
+  function getAllUsers() {
+    const usersStr = localStorage.getItem('bakeryUsers');
+    return usersStr ? JSON.parse(usersStr) : [];
+  }
+
+  // Save user to users list
+  function saveUserToList(user) {
+    let users = getAllUsers();
+    // Check if user already exists (by email or phone)
+    const existingIndex = users.findIndex(u => 
+      u.email.toLowerCase() === user.email.toLowerCase() || 
+      u.phone === user.phone
+    );
+    
+    if (existingIndex >= 0) {
+      users[existingIndex] = user; // Update existing
+    } else {
+      users.push(user); // Add new
+    }
+    
+    localStorage.setItem('bakeryUsers', JSON.stringify(users));
+  }
+
+  // Find user by phone or email
+  function findUser(identifier) {
+    const users = getAllUsers();
+    const cleanIdentifier = identifier.trim().toLowerCase();
+    return users.find(u => 
+      u.email.toLowerCase() === cleanIdentifier || 
+      u.phone === cleanIdentifier.replace(/\D/g, '')
+    );
+  }
+
+  // Validate Las Vegas zip code
+  function isValidLasVegasZip(zip) {
+    return lasVegasZipCodes.includes(zip);
+  }
+
+  // Sign Up Functions
+  function openSignup() {
+    closeLogin();
+    document.getElementById('signupModal').classList.add('show');
+  }
+
+  function closeSignup() {
+    document.getElementById('signupModal').classList.remove('show');
+    document.getElementById('signupForm').reset();
+    document.getElementById('zipError').classList.remove('show');
+    document.getElementById('signupSuccess').classList.remove('show');
+    clearErrors('signup');
+  }
+
+  function switchToSignup() {
+    closeLogin();
+    openSignup();
+  }
+
+  // Login Functions
+  function openLogin() {
+    closeSignup();
+    closeCheckout();
+    document.getElementById('loginModal').classList.add('show');
+  }
+
+  function closeLogin() {
+    document.getElementById('loginModal').classList.remove('show');
+    document.getElementById('loginForm').reset();
+    document.getElementById('loginError').style.display = 'none';
+    clearErrors('login');
+  }
+
+  function logout() {
+    clearUser();
+    updateUserDisplay();
+    if (document.getElementById('checkoutModal').classList.contains('show')) {
+      document.getElementById('loginPrompt').style.display = 'block';
+      document.getElementById('userInfoDisplay').style.display = 'none';
+      document.getElementById('checkoutForm').style.display = 'none';
+    }
+  }
+
+  function clearErrors(formType) {
+    const errorElements = document.querySelectorAll(`#${formType}Modal .error`);
+    errorElements.forEach(el => el.classList.remove('show'));
+  }
+
+  // Update user display in checkout
+  function updateUserDisplay() {
+    const loginPrompt = document.getElementById('loginPrompt');
+    const userInfoDisplay = document.getElementById('userInfoDisplay');
+    const checkoutForm = document.getElementById('checkoutForm');
+
+    if (currentUser) {
+      loginPrompt.style.display = 'none';
+      userInfoDisplay.style.display = 'block';
+      checkoutForm.style.display = 'block';
+      
+      document.getElementById('displayName').textContent = `Name: ${currentUser.name}`;
+      document.getElementById('displayEmail').textContent = `Email: ${currentUser.email}`;
+      document.getElementById('displayPhone').textContent = `Phone: ${currentUser.phone}`;
+      document.getElementById('displayZip').textContent = `Zip Code: ${currentUser.zipcode}`;
+      
+      // Set hidden form fields
+      document.getElementById('customerNameInput').value = currentUser.name;
+      document.getElementById('customerEmailInput').value = currentUser.email;
+      document.getElementById('customerPhoneInput').value = currentUser.phone;
+      document.getElementById('customerZipInput').value = currentUser.zipcode;
+    } else {
+      loginPrompt.style.display = 'block';
+      userInfoDisplay.style.display = 'none';
+      checkoutForm.style.display = 'none';
+    }
+  }
+
+  // Sign Up Form Handler
+  document.getElementById('signupForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const name = document.getElementById('signupName').value.trim();
+    const email = document.getElementById('signupEmail').value.trim();
+    const phone = document.getElementById('signupPhone').value.trim().replace(/\D/g, '');
+    const zip = document.getElementById('signupZip').value.trim();
+    
+    let isValid = true;
+    clearErrors('signup');
+    document.getElementById('zipError').classList.remove('show');
+
+    // Validate name
+    if (!name) {
+      document.getElementById('signupNameError').classList.add('show');
+      isValid = false;
+    }
+
+    // Validate email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) {
+      document.getElementById('signupEmailError').classList.add('show');
+      isValid = false;
+    }
+
+    // Validate phone
+    if (!phone || phone.length < 10) {
+      document.getElementById('signupPhoneError').classList.add('show');
+      isValid = false;
+    }
+
+    // Validate zip code
+    if (!zip || zip.length !== 5) {
+      document.getElementById('signupZipError').classList.add('show');
+      isValid = false;
+    } else if (!isValidLasVegasZip(zip)) {
+      document.getElementById('zipError').classList.add('show');
+      isValid = false;
+    }
+
+    if (!isValid) return;
+
+    // Create user object
+    const user = {
+      name: name,
+      email: email,
+      phone: phone,
+      zipcode: zip,
+      createdAt: new Date().toISOString()
+    };
+
+    // Save user
+    saveUser(user);
+    saveUserToList(user);
+
+    // Submit to Netlify Forms
+    this.submit();
+
+    // Show success and close modal
+    document.getElementById('signupSuccess').classList.add('show');
+    setTimeout(() => {
+      closeSignup();
+      if (document.getElementById('checkoutModal').classList.contains('show')) {
+        updateUserDisplay();
+      }
+    }, 2000);
+  });
+
+  // Login Form Handler
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const identifier = document.getElementById('loginIdentifier').value.trim();
+    
+    if (!identifier) {
+      document.getElementById('loginIdentifierError').classList.add('show');
+      return;
+    }
+
+    const user = findUser(identifier);
+    
+    if (user) {
+      saveUser(user);
+      closeLogin();
+      if (document.getElementById('checkoutModal').classList.contains('show')) {
+        updateUserDisplay();
+      } else {
+        openCheckout();
+      }
+    } else {
+      document.getElementById('loginError').style.display = 'block';
+    }
+  });
+
+  // Cart Functions
   function updateCartBadge() {
     const badge = document.getElementById('cartBadge');
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -838,7 +1275,7 @@
   function addToCartWithSize(name, sizeSelectId) {
     const select = document.getElementById(sizeSelectId);
     const size = select.value;
-    const price = size === 'small' ? 8 : 14; // Average price for small/large
+    const price = size === 'small' ? 8 : 14;
     addToCart(name, price, size);
   }
 
@@ -932,6 +1369,7 @@
 
     modal.classList.add('show');
     closeCart();
+    updateUserDisplay();
   }
 
   function closeCheckout() {
@@ -939,42 +1377,14 @@
     modal.classList.remove('show');
   }
 
-  // Form validation and submission
+  // Order Form Handler
   document.getElementById('checkoutForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
-    const name = document.getElementById('customerName').value.trim();
-    const email = document.getElementById('customerEmail').value.trim();
-    const phone = document.getElementById('customerPhone').value.trim();
-    
-    let isValid = true;
-
-    // Validate name
-    if (!name) {
-      document.getElementById('nameError').classList.add('show');
-      isValid = false;
-    } else {
-      document.getElementById('nameError').classList.remove('show');
+    if (!currentUser) {
+      openLogin();
+      return;
     }
-
-    // Validate email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email || !emailRegex.test(email)) {
-      document.getElementById('emailError').classList.add('show');
-      isValid = false;
-    } else {
-      document.getElementById('emailError').classList.remove('show');
-    }
-
-    // Validate phone
-    if (!phone) {
-      document.getElementById('phoneError').classList.add('show');
-      isValid = false;
-    } else {
-      document.getElementById('phoneError').classList.remove('show');
-    }
-
-    if (!isValid) return;
 
     // Submit form
     this.submit();
@@ -989,20 +1399,26 @@
       updateCart();
       updateCartBadge();
       closeCheckout();
-      document.getElementById('checkoutForm').reset();
       document.getElementById('successMessage').classList.remove('show');
       document.getElementById('submitOrderBtn').disabled = false;
     }, 3000);
   });
 
-  // Close modal when clicking outside
-  document.getElementById('checkoutModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-      closeCheckout();
-    }
+  // Close modals when clicking outside
+  document.getElementById('signupModal').addEventListener('click', function(e) {
+    if (e.target === this) closeSignup();
   });
 
-  // Initialize cart
+  document.getElementById('loginModal').addEventListener('click', function(e) {
+    if (e.target === this) closeLogin();
+  });
+
+  document.getElementById('checkoutModal').addEventListener('click', function(e) {
+    if (e.target === this) closeCheckout();
+  });
+
+  // Initialize
+  loadUser();
   updateCart();
 </script>
 

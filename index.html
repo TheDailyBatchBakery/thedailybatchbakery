@@ -28,6 +28,7 @@
       padding: 3rem 2rem;
       text-align: center;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      position: relative;
     }
 
     header h1 {
@@ -65,6 +66,50 @@
     nav a:hover {
       background-color: rgba(255,255,255,0.2);
       transform: translateY(-2px);
+    }
+
+    .cart-icon {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: #b18458;
+      color: white;
+      padding: 1rem;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 1000;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .cart-icon:hover {
+      transform: scale(1.1);
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #d9a86c;
+      color: white;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    .cart-badge.hidden {
+      display: none;
     }
 
     .hero {
@@ -119,6 +164,8 @@
       border-radius: 10px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
     }
 
     #menu li:hover {
@@ -137,6 +184,53 @@
       color: #d9a86c;
       font-weight: bold;
       font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .size-select {
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    .size-select.show {
+      display: block;
+    }
+
+    .size-select label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: #666;
+    }
+
+    .size-select select {
+      width: 100%;
+      padding: 0.5rem;
+      border: 2px solid #d9a86c;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    .add-to-cart-btn {
+      background: #b18458;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 5px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      margin-top: auto;
+    }
+
+    .add-to-cart-btn:hover {
+      background: #d9a86c;
+      transform: translateY(-2px);
+    }
+
+    .add-to-cart-btn:active {
+      transform: translateY(0);
     }
 
     .contact-info {
@@ -160,6 +254,310 @@
 
     .contact-info a:hover {
       text-decoration: underline;
+    }
+
+    /* Cart Sidebar */
+    .cart-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 2000;
+    }
+
+    .cart-overlay.show {
+      display: block;
+    }
+
+    .cart-sidebar {
+      position: fixed;
+      top: 0;
+      right: -400px;
+      width: 400px;
+      max-width: 90%;
+      height: 100%;
+      background: white;
+      box-shadow: -2px 0 10px rgba(0,0,0,0.3);
+      z-index: 2001;
+      transition: right 0.3s ease;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cart-sidebar.open {
+      right: 0;
+    }
+
+    .cart-header {
+      background: #b18458;
+      color: white;
+      padding: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cart-header h2 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .close-cart {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 2rem;
+      cursor: pointer;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cart-items {
+      flex: 1;
+      padding: 1.5rem;
+    }
+
+    .cart-item {
+      background: #faf7f2;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cart-item-info {
+      flex: 1;
+    }
+
+    .cart-item-name {
+      font-weight: bold;
+      color: #b18458;
+      margin-bottom: 0.25rem;
+    }
+
+    .cart-item-size {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .cart-item-price {
+      color: #d9a86c;
+      font-weight: bold;
+      margin-right: 1rem;
+    }
+
+    .remove-item {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 0.5rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .cart-empty {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #666;
+    }
+
+    .cart-footer {
+      padding: 1.5rem;
+      background: #faf7f2;
+      border-top: 2px solid #d9a86c;
+    }
+
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: #b18458;
+    }
+
+    .checkout-btn {
+      width: 100%;
+      background: #b18458;
+      color: white;
+      border: none;
+      padding: 1rem;
+      border-radius: 5px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .checkout-btn:hover {
+      background: #d9a86c;
+    }
+
+    .checkout-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    /* Checkout Modal */
+    .checkout-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 3000;
+      overflow-y: auto;
+    }
+
+    .checkout-modal.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .checkout-form-container {
+      background: white;
+      border-radius: 10px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .checkout-form-container h2 {
+      margin-bottom: 1.5rem;
+      color: #b18458;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #d9a86c;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #b18458;
+    }
+
+    .form-group .error {
+      color: #dc3545;
+      font-size: 0.9rem;
+      margin-top: 0.25rem;
+      display: none;
+    }
+
+    .form-group .error.show {
+      display: block;
+    }
+
+    .order-summary {
+      background: #faf7f2;
+      padding: 1rem;
+      border-radius: 5px;
+      margin-bottom: 1.5rem;
+    }
+
+    .order-summary h3 {
+      margin-bottom: 1rem;
+      color: #b18458;
+    }
+
+    .order-summary-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .order-summary-total {
+      border-top: 2px solid #d9a86c;
+      padding-top: 0.5rem;
+      margin-top: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .payment-placeholder {
+      background: #fff3cd;
+      border: 2px dashed #d9a86c;
+      padding: 1.5rem;
+      border-radius: 5px;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .payment-placeholder p {
+      color: #856404;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .submit-order-btn {
+      width: 100%;
+      background: #b18458;
+      color: white;
+      border: none;
+      padding: 1rem;
+      border-radius: 5px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .submit-order-btn:hover {
+      background: #d9a86c;
+    }
+
+    .submit-order-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .success-message {
+      display: none;
+      background: #d4edda;
+      color: #155724;
+      padding: 1rem;
+      border-radius: 5px;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .success-message.show {
+      display: block;
     }
 
     footer {
@@ -196,6 +594,23 @@
       .section {
         padding: 2rem 1rem;
       }
+
+      .cart-icon {
+        top: 0.5rem;
+        right: 0.5rem;
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+      }
+
+      .cart-sidebar {
+        width: 100%;
+        right: -100%;
+      }
+
+      .checkout-modal.show {
+        padding: 1rem;
+      }
     }
   </style>
 </head>
@@ -213,6 +628,11 @@
   <a href="#contact">Contact</a>
 </nav>
 
+<div class="cart-icon" onclick="toggleCart()">
+  🛒
+  <span class="cart-badge hidden" id="cartBadge">0</span>
+</div>
+
 <section class="hero">
   <h1>Welcome to The Daily Batch Bakery</h1>
   <p>Small-batch breads and baked goods, made fresh for your table.</p>
@@ -226,51 +646,88 @@
 <section id="menu" class="section">
   <h2>Our Products</h2>
   <ul>
-    <li>
+    <li data-product="Lemon Loaf" data-price="5" data-has-size="false">
       <strong>Lemon Loaf</strong>
       <span class="price">$5</span>
+      <button class="add-to-cart-btn" onclick="addToCart('Lemon Loaf', 5, '')">Add to Cart</button>
     </li>
-    <li>
+    <li data-product="Banana Bread" data-price="5" data-has-size="false">
       <strong>Banana Bread</strong>
       <span class="price">$5</span>
+      <button class="add-to-cart-btn" onclick="addToCart('Banana Bread', 5, '')">Add to Cart</button>
     </li>
-    <li>
+    <li data-product="Dinner Rolls" data-price="5" data-has-size="false">
       <strong>Dinner Rolls</strong>
       <span class="price">$5</span>
+      <button class="add-to-cart-btn" onclick="addToCart('Dinner Rolls', 5, '')">Add to Cart</button>
     </li>
-    <li>
+    <li data-product="Cinnamon Rolls" data-price="12" data-has-size="false">
       <strong>Cinnamon Rolls</strong>
       <span class="price">$12</span>
+      <button class="add-to-cart-btn" onclick="addToCart('Cinnamon Rolls', 12, '')">Add to Cart</button>
     </li>
-    <li>
+    <li data-product="Pecan Rolls" data-price="12" data-has-size="false">
       <strong>Pecan Rolls</strong>
       <span class="price">$12</span>
+      <button class="add-to-cart-btn" onclick="addToCart('Pecan Rolls', 12, '')">Add to Cart</button>
     </li>
-    <li>
+    <li data-product="Chocolate Chip Cookies" data-price="8" data-has-size="true">
       <strong>Chocolate Chip Cookies</strong>
       <span class="price">$6-10 (small) / $10-18 (large)</span>
+      <div class="size-select show">
+        <label for="size-chocolate-chip">Size:</label>
+        <select id="size-chocolate-chip">
+          <option value="small">Small - $6-10</option>
+          <option value="large">Large - $10-18</option>
+        </select>
+      </div>
+      <button class="add-to-cart-btn" onclick="addToCartWithSize('Chocolate Chip Cookies', 'size-chocolate-chip')">Add to Cart</button>
     </li>
-    <li>
+    <li data-product="Peanut Butter Cookies" data-price="8" data-has-size="true">
       <strong>Peanut Butter Cookies</strong>
       <span class="price">$6-10 (small) / $10-18 (large)</span>
+      <div class="size-select show">
+        <label for="size-peanut-butter">Size:</label>
+        <select id="size-peanut-butter">
+          <option value="small">Small - $6-10</option>
+          <option value="large">Large - $10-18</option>
+        </select>
+      </div>
+      <button class="add-to-cart-btn" onclick="addToCartWithSize('Peanut Butter Cookies', 'size-peanut-butter')">Add to Cart</button>
     </li>
-    <li>
+    <li data-product="Chocolate Crinkle Cookies" data-price="8" data-has-size="true">
       <strong>Chocolate Crinkle Cookies</strong>
       <span class="price">$6-10 (small) / $10-18 (large)</span>
+      <div class="size-select show">
+        <label for="size-crinkle">Size:</label>
+        <select id="size-crinkle">
+          <option value="small">Small - $6-10</option>
+          <option value="large">Large - $10-18</option>
+        </select>
+      </div>
+      <button class="add-to-cart-btn" onclick="addToCartWithSize('Chocolate Crinkle Cookies', 'size-crinkle')">Add to Cart</button>
     </li>
-    <li>
+    <li data-product="Cookie Assortment" data-price="8" data-has-size="true">
       <strong>Cookie Assortment</strong>
       <span class="price">$6-10 (small) / $10-18 (large)</span>
+      <div class="size-select show">
+        <label for="size-assortment">Size:</label>
+        <select id="size-assortment">
+          <option value="small">Small - $6-10</option>
+          <option value="large">Large - $10-18</option>
+        </select>
+      </div>
+      <button class="add-to-cart-btn" onclick="addToCartWithSize('Cookie Assortment', 'size-assortment')">Add to Cart</button>
     </li>
   </ul>
 </section>
 
 <section id="order" class="section">
   <h2>How to Order</h2>
-  <p>Send us a message with the items you want and your preferred pickup day.</p>
+  <p>Add items to your cart and checkout, or send us a message with the items you want and your preferred pickup day.</p>
   <div class="contact-info">
     <p><strong>Email:</strong> <a href="mailto:thedailybatchbakery@gmail.com">thedailybatchbakery@gmail.com</a></p>
-    <p><strong>Text:</strong> <a href="tel:7025129694">Text Crosbie at (702) 512-9694</a></p>
+    <p><strong>Text:</strong> <a href="sms:7025129694">Text Crosbie at (702) 512-9694</a></p>
   </div>
   <p style="margin-top: 1.5rem;"><strong>Delivery:</strong> Orders can be picked up in person or delivered. Delivery fee is $10 for orders under $50. Free delivery for orders over $50!</p>
 </section>
@@ -279,20 +736,275 @@
   <h2>Contact Us</h2>
   <div class="contact-info">
     <p><strong>Email:</strong> <a href="mailto:thedailybatchbakery@gmail.com">thedailybatchbakery@gmail.com</a></p>
-    <p><strong>Phone:</strong> <a href="tel:7025129694">Text Crosbie at (702) 512-9694</a></p>
+    <p><strong>Phone:</strong> <a href="sms:7025129694">Text Crosbie at (702) 512-9694</a></p>
   </div>
 </section>
+
+<!-- Cart Sidebar -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <h2>Your Cart</h2>
+    <button class="close-cart" onclick="closeCart()">&times;</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty">Your cart is empty</div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total">
+      <span>Total:</span>
+      <span id="cartTotal">$0.00</span>
+    </div>
+    <button class="checkout-btn" id="checkoutBtn" onclick="openCheckout()" disabled>Checkout</button>
+  </div>
+</div>
+
+<!-- Checkout Modal -->
+<div class="checkout-modal" id="checkoutModal">
+  <div class="checkout-form-container">
+    <h2>Checkout</h2>
+    <div class="success-message" id="successMessage">
+      Order submitted successfully! We'll contact you soon to confirm your order.
+    </div>
+    <form name="order" netlify netlify-honeypot="bot-field" id="checkoutForm">
+      <input type="hidden" name="form-name" value="order" />
+      <p style="display: none;">
+        <label>Don't fill this out: <input name="bot-field" /></label>
+      </p>
+      
+      <div class="order-summary" id="orderSummary"></div>
+
+      <div class="form-group">
+        <label for="customerName">Name *</label>
+        <input type="text" id="customerName" name="name" required>
+        <div class="error" id="nameError">Please enter your name</div>
+      </div>
+
+      <div class="form-group">
+        <label for="customerEmail">Email *</label>
+        <input type="email" id="customerEmail" name="email" required>
+        <div class="error" id="emailError">Please enter a valid email address</div>
+      </div>
+
+      <div class="form-group">
+        <label for="customerPhone">Phone Number *</label>
+        <input type="tel" id="customerPhone" name="phone" required>
+        <div class="error" id="phoneError">Please enter your phone number</div>
+      </div>
+
+      <div class="payment-placeholder">
+        <p>💳 Online payments coming soon</p>
+      </div>
+
+      <input type="hidden" name="orderItems" id="orderItemsInput">
+      <input type="hidden" name="orderTotal" id="orderTotalInput">
+
+      <button type="submit" class="submit-order-btn" id="submitOrderBtn">Submit Order</button>
+    </form>
+  </div>
+</div>
 
 <footer>
   <p>&copy; 2025 The Daily Batch Bakery. All rights reserved.</p>
 </footer>
 
+<script>
+  let cart = [];
+
+  function updateCartBadge() {
+    const badge = document.getElementById('cartBadge');
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    if (totalItems > 0) {
+      badge.textContent = totalItems;
+      badge.classList.remove('hidden');
+    } else {
+      badge.classList.add('hidden');
+    }
+  }
+
+  function addToCart(name, price, size) {
+    const item = {
+      id: Date.now(),
+      name: name,
+      price: parseFloat(price),
+      size: size || '',
+      quantity: 1
+    };
+    cart.push(item);
+    updateCart();
+    updateCartBadge();
+  }
+
+  function addToCartWithSize(name, sizeSelectId) {
+    const select = document.getElementById(sizeSelectId);
+    const size = select.value;
+    const price = size === 'small' ? 8 : 14; // Average price for small/large
+    addToCart(name, price, size);
+  }
+
+  function removeFromCart(id) {
+    cart = cart.filter(item => item.id !== id);
+    updateCart();
+    updateCartBadge();
+  }
+
+  function updateCart() {
+    const cartItems = document.getElementById('cartItems');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    const cartTotal = document.getElementById('cartTotal');
+
+    if (cart.length === 0) {
+      cartItems.innerHTML = '<div class="cart-empty">Your cart is empty</div>';
+      checkoutBtn.disabled = true;
+      cartTotal.textContent = '$0.00';
+      return;
+    }
+
+    checkoutBtn.disabled = false;
+    
+    let total = 0;
+    cartItems.innerHTML = cart.map(item => {
+      const itemTotal = item.price * item.quantity;
+      total += itemTotal;
+      const sizeText = item.size ? ` (${item.size})` : '';
+      return `
+        <div class="cart-item">
+          <div class="cart-item-info">
+            <div class="cart-item-name">${item.name}${sizeText}</div>
+            <div class="cart-item-size">Qty: ${item.quantity}</div>
+          </div>
+          <div class="cart-item-price">$${itemTotal.toFixed(2)}</div>
+          <button class="remove-item" onclick="removeFromCart(${item.id})">Remove</button>
+        </div>
+      `;
+    }).join('');
+
+    cartTotal.textContent = `$${total.toFixed(2)}`;
+  }
+
+  function toggleCart() {
+    const sidebar = document.getElementById('cartSidebar');
+    const overlay = document.getElementById('cartOverlay');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  }
+
+  function closeCart() {
+    const sidebar = document.getElementById('cartSidebar');
+    const overlay = document.getElementById('cartOverlay');
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  }
+
+  function openCheckout() {
+    if (cart.length === 0) return;
+    
+    const modal = document.getElementById('checkoutModal');
+    const summary = document.getElementById('orderSummary');
+    const orderItemsInput = document.getElementById('orderItemsInput');
+    const orderTotalInput = document.getElementById('orderTotalInput');
+
+    // Build order summary
+    let total = 0;
+    let summaryHTML = '<h3>Order Summary</h3>';
+    cart.forEach(item => {
+      const itemTotal = item.price * item.quantity;
+      total += itemTotal;
+      const sizeText = item.size ? ` (${item.size})` : '';
+      summaryHTML += `
+        <div class="order-summary-item">
+          <span>${item.name}${sizeText} x${item.quantity}</span>
+          <span>$${itemTotal.toFixed(2)}</span>
+        </div>
+      `;
+    });
+    summaryHTML += `
+      <div class="order-summary-total">
+        <span>Total:</span>
+        <span>$${total.toFixed(2)}</span>
+      </div>
+    `;
+    summary.innerHTML = summaryHTML;
+
+    // Set hidden form fields
+    orderItemsInput.value = JSON.stringify(cart);
+    orderTotalInput.value = total.toFixed(2);
+
+    modal.classList.add('show');
+    closeCart();
+  }
+
+  function closeCheckout() {
+    const modal = document.getElementById('checkoutModal');
+    modal.classList.remove('show');
+  }
+
+  // Form validation and submission
+  document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const name = document.getElementById('customerName').value.trim();
+    const email = document.getElementById('customerEmail').value.trim();
+    const phone = document.getElementById('customerPhone').value.trim();
+    
+    let isValid = true;
+
+    // Validate name
+    if (!name) {
+      document.getElementById('nameError').classList.add('show');
+      isValid = false;
+    } else {
+      document.getElementById('nameError').classList.remove('show');
+    }
+
+    // Validate email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) {
+      document.getElementById('emailError').classList.add('show');
+      isValid = false;
+    } else {
+      document.getElementById('emailError').classList.remove('show');
+    }
+
+    // Validate phone
+    if (!phone) {
+      document.getElementById('phoneError').classList.add('show');
+      isValid = false;
+    } else {
+      document.getElementById('phoneError').classList.remove('show');
+    }
+
+    if (!isValid) return;
+
+    // Submit form
+    this.submit();
+    
+    // Show success message
+    document.getElementById('successMessage').classList.add('show');
+    document.getElementById('submitOrderBtn').disabled = true;
+    
+    // Clear cart and close modal after delay
+    setTimeout(() => {
+      cart = [];
+      updateCart();
+      updateCartBadge();
+      closeCheckout();
+      document.getElementById('checkoutForm').reset();
+      document.getElementById('successMessage').classList.remove('show');
+      document.getElementById('submitOrderBtn').disabled = false;
+    }, 3000);
+  });
+
+  // Close modal when clicking outside
+  document.getElementById('checkoutModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      closeCheckout();
+    }
+  });
+
+  // Initialize cart
+  updateCart();
+</script>
+
 </body>
 </html>
-
-
-
-
-
-
-

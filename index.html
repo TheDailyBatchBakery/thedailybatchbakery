@@ -1019,9 +1019,9 @@
 
     <form id="loginForm">
       <div class="form-group">
-        <label for="loginIdentifier">Phone Number or Email *</label>
-        <input type="text" id="loginIdentifier" required placeholder="Enter phone or email">
-        <div class="error" id="loginIdentifierError">Please enter your phone number or email</div>
+        <label for="loginPhone">Phone Number *</label>
+        <input type="tel" id="loginPhone" required placeholder="Enter your phone number">
+        <div class="error" id="loginPhoneError">Please enter your phone number</div>
       </div>
 
       <button type="submit" class="submit-btn" id="loginSubmitBtn">Login</button>
@@ -1249,14 +1249,11 @@
     localStorage.setItem('bakeryUsers', JSON.stringify(users));
   }
 
-  // Find user by phone or email
-  function findUser(identifier) {
+  // Find user by phone number
+  function findUser(phone) {
     const users = getAllUsers();
-    const cleanIdentifier = identifier.trim().toLowerCase();
-    return users.find(u => 
-      u.email.toLowerCase() === cleanIdentifier || 
-      u.phone === cleanIdentifier.replace(/\D/g, '')
-    );
+    const cleanPhone = phone.replace(/\D/g, ''); // Remove all non-digits
+    return users.find(u => u.phone === cleanPhone);
   }
 
   // Validate Las Vegas zip code
@@ -1294,6 +1291,7 @@
     document.getElementById('loginModal').classList.remove('show');
     document.getElementById('loginForm').reset();
     document.getElementById('loginError').style.display = 'none';
+    document.getElementById('loginPhoneError').classList.remove('show');
     clearErrors('login');
   }
 
@@ -1415,8 +1413,8 @@
       createdAt: new Date().toISOString()
     };
 
-    // Check if user already exists
-    const existingUser = findUser(email) || findUser(phone);
+    // Check if user already exists (by phone number)
+    const existingUser = findUser(phone);
     const isNewUser = !existingUser;
 
     // Save user
@@ -1432,11 +1430,9 @@
     const signupSuccessText = document.getElementById('signupSuccessText');
     signupSuccessText.textContent = `Thank you ${name} for signing up! You can now proceed to checkout.`;
     document.getElementById('signupSuccess').classList.add('show');
+    updateUserDisplay(); // Show welcome banner immediately
     setTimeout(() => {
       closeSignup();
-      if (document.getElementById('checkoutModal').classList.contains('show')) {
-        updateUserDisplay();
-      }
     }, 3000);
   });
 
@@ -1444,21 +1440,23 @@
   document.getElementById('loginForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
-    const identifier = document.getElementById('loginIdentifier').value.trim();
+    const phone = document.getElementById('loginPhone').value.trim();
     
-    if (!identifier) {
-      document.getElementById('loginIdentifierError').classList.add('show');
+    if (!phone) {
+      document.getElementById('loginPhoneError').classList.add('show');
       return;
     }
 
-    const user = findUser(identifier);
+    const user = findUser(phone);
     
     if (user) {
       saveUser(user);
+      updateUserDisplay(); // Show welcome banner immediately
       closeLogin();
       if (document.getElementById('checkoutModal').classList.contains('show')) {
-        updateUserDisplay();
-      } else {
+        // Already updated above
+      } else if (cart.length > 0) {
+        // If cart has items, open checkout
         openCheckout();
       }
     } else {

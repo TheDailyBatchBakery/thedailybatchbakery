@@ -764,7 +764,13 @@
       #userStatusIndicator {
         font-size: 0.8rem;
         padding: 0.4rem 0.8rem;
-        max-width: 200px;
+        max-width: 250px;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      #userStatusIndicator button {
+        width: 100%;
       }
 
       .cart-sidebar {
@@ -791,15 +797,20 @@
   <a href="#menu">Products</a>
   <a href="#order">Order</a>
   <a href="#contact">Contact</a>
-  <a href="#" onclick="event.preventDefault(); openLogin();">Login</a>
-  <a href="#" onclick="event.preventDefault(); openSignup();">Sign Up</a>
+  <a href="#" onclick="event.preventDefault(); openLogin();" id="navLogin" style="display: inline-block;">Login</a>
+  <a href="#" onclick="event.preventDefault(); openSignup();" id="navSignup" style="display: inline-block;">Sign Up</a>
+  <a href="#" onclick="event.preventDefault(); logout();" id="navLogout" style="display: none;">Logout</a>
 </nav>
 
-<div style="position: fixed; top: 1rem; right: 1rem; z-index: 1000; display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
-  <div id="userStatusIndicator" style="display: none; background: #d4edda; color: #155724; padding: 0.5rem 1rem; border-radius: 5px; font-size: 0.9rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2); max-width: 250px; text-align: right;">
+<div style="position: fixed; top: 1rem; left: 1rem; z-index: 1000;">
+  <div id="userStatusIndicator" style="display: none; background: #d4edda; color: #155724; padding: 0.75rem 1rem; border-radius: 5px; font-size: 0.9rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2); max-width: 300px; display: flex; align-items: center; gap: 0.75rem;">
     <span id="userStatusText"></span>
+    <button onclick="logout()" style="background: #b18458; color: white; border: none; padding: 0.25rem 0.75rem; border-radius: 3px; font-size: 0.8rem; cursor: pointer; white-space: nowrap;">Logout</button>
   </div>
-  <div class="cart-icon" onclick="toggleCart()" style="margin-top: 0;">
+</div>
+
+<div style="position: fixed; top: 1rem; right: 1rem; z-index: 1000;">
+  <div class="cart-icon" onclick="toggleCart()">
     🛒
     <span class="cart-badge hidden" id="cartBadge">0</span>
   </div>
@@ -834,75 +845,87 @@
   </div>
 
   <ul id="productsList">
-    <li data-product="Lemon Loaf" data-price="5" data-has-size="false" data-category="sweet-loafs all">
-      <strong>Lemon Loaf</strong>
-      <span class="price">$5</span>
-      <button class="add-to-cart-btn" onclick="addToCart('Lemon Loaf', 5, '')">Add to Cart</button>
+    <li data-product="Round Top Sandwich Bread" data-price="4" data-has-size="true" data-category="breads-rolls all">
+      <strong>Round Top Sandwich Bread</strong>
+      <span class="price">$3 (1 loaf) / $5 (2 loaves)</span>
+      <div class="size-select show">
+        <label for="size-sandwich-bread">Quantity:</label>
+        <select id="size-sandwich-bread">
+          <option value="1-loaf">1 Loaf - $3</option>
+          <option value="2-loaves">2 Loaves - $5</option>
+        </select>
+      </div>
+      <button class="add-to-cart-btn" onclick="addToCartWithSize('Round Top Sandwich Bread', 'size-sandwich-bread')">Add to Cart</button>
     </li>
-    <li data-product="Banana Bread" data-price="5" data-has-size="false" data-category="sweet-loafs all">
-      <strong>Banana Bread</strong>
-      <span class="price">$5</span>
-      <button class="add-to-cart-btn" onclick="addToCart('Banana Bread', 5, '')">Add to Cart</button>
-    </li>
-    <li data-product="Dinner Rolls" data-price="5" data-has-size="false" data-category="breads-rolls all">
+    <li data-product="Dinner Rolls" data-price="6" data-has-size="false" data-category="breads-rolls all">
       <strong>Dinner Rolls</strong>
-      <span class="price">$5</span>
-      <button class="add-to-cart-btn" onclick="addToCart('Dinner Rolls', 5, '')">Add to Cart</button>
+      <span class="price">$6</span>
+      <button class="add-to-cart-btn" onclick="addToCart('Dinner Rolls', 6, '')">Add to Cart</button>
     </li>
-    <li data-product="Cinnamon Rolls" data-price="12" data-has-size="false" data-category="cinnamon-rolls all">
+    <li data-product="Lemon Loaf" data-price="10" data-has-size="false" data-category="sweet-loafs all">
+      <strong>Lemon Loaf</strong>
+      <span class="price">$10</span>
+      <button class="add-to-cart-btn" onclick="addToCart('Lemon Loaf', 10, '')">Add to Cart</button>
+    </li>
+    <li data-product="Banana Bread" data-price="10" data-has-size="false" data-category="sweet-loafs all">
+      <strong>Banana Bread</strong>
+      <span class="price">$10</span>
+      <button class="add-to-cart-btn" onclick="addToCart('Banana Bread', 10, '')">Add to Cart</button>
+    </li>
+    <li data-product="Cinnamon Rolls" data-price="18" data-has-size="false" data-category="cinnamon-rolls all">
       <strong>Cinnamon Rolls</strong>
-      <span class="price">$12</span>
-      <button class="add-to-cart-btn" onclick="addToCart('Cinnamon Rolls', 12, '')">Add to Cart</button>
+      <span class="price">$18</span>
+      <button class="add-to-cart-btn" onclick="addToCart('Cinnamon Rolls', 18, '')">Add to Cart</button>
     </li>
-    <li data-product="Pecan Rolls" data-price="12" data-has-size="false" data-category="cinnamon-rolls all">
+    <li data-product="Pecan Rolls" data-price="18" data-has-size="false" data-category="cinnamon-rolls all">
       <strong>Pecan Rolls</strong>
-      <span class="price">$12</span>
-      <button class="add-to-cart-btn" onclick="addToCart('Pecan Rolls', 12, '')">Add to Cart</button>
+      <span class="price">$18</span>
+      <button class="add-to-cart-btn" onclick="addToCart('Pecan Rolls', 18, '')">Add to Cart</button>
     </li>
-    <li data-product="Chocolate Chip Cookies" data-price="8" data-has-size="true" data-category="cookies all">
+    <li data-product="Chocolate Chip Cookies" data-price="9" data-has-size="true" data-category="cookies all">
       <strong>Chocolate Chip Cookies</strong>
-      <span class="price">$6-10 (small) / $10-18 (large)</span>
+      <span class="price">$8-10 (small) / $14-18 (large)</span>
       <div class="size-select show">
         <label for="size-chocolate-chip">Size:</label>
         <select id="size-chocolate-chip">
-          <option value="small">Small - $6-10</option>
-          <option value="large">Large - $10-18</option>
+          <option value="small">Small - $8-10</option>
+          <option value="large">Large - $14-18</option>
         </select>
       </div>
       <button class="add-to-cart-btn" onclick="addToCartWithSize('Chocolate Chip Cookies', 'size-chocolate-chip')">Add to Cart</button>
     </li>
-    <li data-product="Peanut Butter Cookies" data-price="8" data-has-size="true" data-category="cookies all">
+    <li data-product="Peanut Butter Cookies" data-price="9" data-has-size="true" data-category="cookies all">
       <strong>Peanut Butter Cookies</strong>
-      <span class="price">$6-10 (small) / $10-18 (large)</span>
+      <span class="price">$8-10 (small) / $14-18 (large)</span>
       <div class="size-select show">
         <label for="size-peanut-butter">Size:</label>
         <select id="size-peanut-butter">
-          <option value="small">Small - $6-10</option>
-          <option value="large">Large - $10-18</option>
+          <option value="small">Small - $8-10</option>
+          <option value="large">Large - $14-18</option>
         </select>
       </div>
       <button class="add-to-cart-btn" onclick="addToCartWithSize('Peanut Butter Cookies', 'size-peanut-butter')">Add to Cart</button>
     </li>
-    <li data-product="Chocolate Crinkle Cookies" data-price="8" data-has-size="true" data-category="cookies all">
+    <li data-product="Chocolate Crinkle Cookies" data-price="9" data-has-size="true" data-category="cookies all">
       <strong>Chocolate Crinkle Cookies</strong>
-      <span class="price">$6-10 (small) / $10-18 (large)</span>
+      <span class="price">$8-10 (small) / $14-18 (large)</span>
       <div class="size-select show">
         <label for="size-crinkle">Size:</label>
         <select id="size-crinkle">
-          <option value="small">Small - $6-10</option>
-          <option value="large">Large - $10-18</option>
+          <option value="small">Small - $8-10</option>
+          <option value="large">Large - $14-18</option>
         </select>
       </div>
       <button class="add-to-cart-btn" onclick="addToCartWithSize('Chocolate Crinkle Cookies', 'size-crinkle')">Add to Cart</button>
     </li>
-    <li data-product="Cookie Assortment" data-price="8" data-has-size="true" data-category="cookies all">
+    <li data-product="Cookie Assortment" data-price="9" data-has-size="true" data-category="cookies all">
       <strong>Cookie Assortment</strong>
-      <span class="price">$6-10 (small) / $10-18 (large)</span>
+      <span class="price">$8-10 (small) / $14-18 (large)</span>
       <div class="size-select show">
         <label for="size-assortment">Size:</label>
         <select id="size-assortment">
-          <option value="small">Small - $6-10</option>
-          <option value="large">Large - $10-18</option>
+          <option value="small">Small - $8-10</option>
+          <option value="large">Large - $14-18</option>
         </select>
       </div>
       <button class="add-to-cart-btn" onclick="addToCartWithSize('Cookie Assortment', 'size-assortment')">Add to Cart</button>
@@ -1282,6 +1305,10 @@
       document.getElementById('userInfoDisplay').style.display = 'none';
       document.getElementById('checkoutForm').style.display = 'none';
     }
+    // Close any open modals
+    closeLogin();
+    closeSignup();
+    closeCheckout();
   }
 
   function clearErrors(formType) {
@@ -1314,8 +1341,13 @@
       document.getElementById('customerZipInput').value = currentUser.zipcode;
       
       // Update user status indicator
-      userStatusIndicator.style.display = 'block';
+      userStatusIndicator.style.display = 'flex';
       userStatusText.textContent = `Welcome back, ${currentUser.name}!`;
+      
+      // Update navigation (show logout, hide login/signup)
+      document.getElementById('navLogin').style.display = 'none';
+      document.getElementById('navSignup').style.display = 'none';
+      document.getElementById('navLogout').style.display = 'inline-block';
     } else {
       loginPrompt.style.display = 'block';
       userInfoDisplay.style.display = 'none';
@@ -1323,6 +1355,11 @@
       
       // Hide user status indicator
       userStatusIndicator.style.display = 'none';
+      
+      // Update navigation (show login/signup, hide logout)
+      document.getElementById('navLogin').style.display = 'inline-block';
+      document.getElementById('navSignup').style.display = 'inline-block';
+      document.getElementById('navLogout').style.display = 'none';
     }
   }
 
@@ -1457,7 +1494,21 @@
   function addToCartWithSize(name, sizeSelectId) {
     const select = document.getElementById(sizeSelectId);
     const size = select.value;
-    const price = size === 'small' ? 8 : 14;
+    let price;
+    
+    // Handle Round Top Sandwich Bread
+    if (name === 'Round Top Sandwich Bread') {
+      price = size === '1-loaf' ? 3 : 5;
+    } 
+    // Handle cookies
+    else if (name.includes('Cookie')) {
+      price = size === 'small' ? 9 : 16;
+    } 
+    // Default fallback
+    else {
+      price = size === 'small' ? 9 : 16;
+    }
+    
     addToCart(name, price, size);
   }
 

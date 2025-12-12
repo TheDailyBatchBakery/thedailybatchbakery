@@ -150,6 +150,40 @@
       font-size: 1.1rem;
     }
 
+    .category-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      justify-content: center;
+    }
+
+    .category-btn {
+      background: white;
+      color: #b18458;
+      border: 2px solid #d9a86c;
+      padding: 0.75rem 1.5rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .category-btn:hover {
+      background: #d9a86c;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .category-btn.active {
+      background: #b18458;
+      color: white;
+      border-color: #b18458;
+    }
+
     #menu ul {
       list-style: none;
       display: grid;
@@ -712,6 +746,15 @@
         padding: 2rem 1rem;
       }
 
+      .category-buttons {
+        gap: 0.5rem;
+      }
+
+      .category-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+
       .cart-icon {
         width: 50px;
         height: 50px;
@@ -748,14 +791,15 @@
   <a href="#menu">Products</a>
   <a href="#order">Order</a>
   <a href="#contact">Contact</a>
+  <a href="#" onclick="event.preventDefault(); openLogin();">Login</a>
   <a href="#" onclick="event.preventDefault(); openSignup();">Sign Up</a>
 </nav>
 
 <div style="position: fixed; top: 1rem; right: 1rem; z-index: 1000; display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
-  <div id="userStatusIndicator" style="display: none; background: #d4edda; color: #155724; padding: 0.5rem 1rem; border-radius: 5px; font-size: 0.9rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+  <div id="userStatusIndicator" style="display: none; background: #d4edda; color: #155724; padding: 0.5rem 1rem; border-radius: 5px; font-size: 0.9rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2); max-width: 250px; text-align: right;">
     <span id="userStatusText"></span>
   </div>
-  <div class="cart-icon" onclick="toggleCart()">
+  <div class="cart-icon" onclick="toggleCart()" style="margin-top: 0;">
     🛒
     <span class="cart-badge hidden" id="cartBadge">0</span>
   </div>
@@ -773,33 +817,49 @@
 
 <section id="menu" class="section">
   <h2>Our Products</h2>
-  <ul>
-    <li data-product="Lemon Loaf" data-price="5" data-has-size="false">
+  
+  <div class="category-buttons">
+    <button class="category-btn active" data-category="all" onclick="filterProducts('all')">All Products</button>
+    <button class="category-btn" data-category="breads-rolls" onclick="filterProducts('breads-rolls')">Breads and Rolls</button>
+    <button class="category-btn" data-category="sourdough" onclick="filterProducts('sourdough')">Sourdough</button>
+    <button class="category-btn" data-category="sweet-loafs" onclick="filterProducts('sweet-loafs')">Sweet Loafs</button>
+    <button class="category-btn" data-category="cinnamon-rolls" onclick="filterProducts('cinnamon-rolls')">Cinnamon Rolls</button>
+    <button class="category-btn" data-category="cookies" onclick="filterProducts('cookies')">Cookies</button>
+    <button class="category-btn" data-category="pastries" onclick="filterProducts('pastries')">Pastries</button>
+  </div>
+
+  <div id="comingSoonMessage" style="display: none; text-align: center; padding: 3rem 2rem; background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-top: 2rem;">
+    <h3 style="color: #b18458; margin-bottom: 1rem;">Fresh new items coming soon!</h3>
+    <p style="color: #666;">We're working on adding new products to this category. Check back soon!</p>
+  </div>
+
+  <ul id="productsList">
+    <li data-product="Lemon Loaf" data-price="5" data-has-size="false" data-category="sweet-loafs all">
       <strong>Lemon Loaf</strong>
       <span class="price">$5</span>
       <button class="add-to-cart-btn" onclick="addToCart('Lemon Loaf', 5, '')">Add to Cart</button>
     </li>
-    <li data-product="Banana Bread" data-price="5" data-has-size="false">
+    <li data-product="Banana Bread" data-price="5" data-has-size="false" data-category="sweet-loafs all">
       <strong>Banana Bread</strong>
       <span class="price">$5</span>
       <button class="add-to-cart-btn" onclick="addToCart('Banana Bread', 5, '')">Add to Cart</button>
     </li>
-    <li data-product="Dinner Rolls" data-price="5" data-has-size="false">
+    <li data-product="Dinner Rolls" data-price="5" data-has-size="false" data-category="breads-rolls all">
       <strong>Dinner Rolls</strong>
       <span class="price">$5</span>
       <button class="add-to-cart-btn" onclick="addToCart('Dinner Rolls', 5, '')">Add to Cart</button>
     </li>
-    <li data-product="Cinnamon Rolls" data-price="12" data-has-size="false">
+    <li data-product="Cinnamon Rolls" data-price="12" data-has-size="false" data-category="cinnamon-rolls all">
       <strong>Cinnamon Rolls</strong>
       <span class="price">$12</span>
       <button class="add-to-cart-btn" onclick="addToCart('Cinnamon Rolls', 12, '')">Add to Cart</button>
     </li>
-    <li data-product="Pecan Rolls" data-price="12" data-has-size="false">
+    <li data-product="Pecan Rolls" data-price="12" data-has-size="false" data-category="cinnamon-rolls all">
       <strong>Pecan Rolls</strong>
       <span class="price">$12</span>
       <button class="add-to-cart-btn" onclick="addToCart('Pecan Rolls', 12, '')">Add to Cart</button>
     </li>
-    <li data-product="Chocolate Chip Cookies" data-price="8" data-has-size="true">
+    <li data-product="Chocolate Chip Cookies" data-price="8" data-has-size="true" data-category="cookies all">
       <strong>Chocolate Chip Cookies</strong>
       <span class="price">$6-10 (small) / $10-18 (large)</span>
       <div class="size-select show">
@@ -811,7 +871,7 @@
       </div>
       <button class="add-to-cart-btn" onclick="addToCartWithSize('Chocolate Chip Cookies', 'size-chocolate-chip')">Add to Cart</button>
     </li>
-    <li data-product="Peanut Butter Cookies" data-price="8" data-has-size="true">
+    <li data-product="Peanut Butter Cookies" data-price="8" data-has-size="true" data-category="cookies all">
       <strong>Peanut Butter Cookies</strong>
       <span class="price">$6-10 (small) / $10-18 (large)</span>
       <div class="size-select show">
@@ -823,7 +883,7 @@
       </div>
       <button class="add-to-cart-btn" onclick="addToCartWithSize('Peanut Butter Cookies', 'size-peanut-butter')">Add to Cart</button>
     </li>
-    <li data-product="Chocolate Crinkle Cookies" data-price="8" data-has-size="true">
+    <li data-product="Chocolate Crinkle Cookies" data-price="8" data-has-size="true" data-category="cookies all">
       <strong>Chocolate Crinkle Cookies</strong>
       <span class="price">$6-10 (small) / $10-18 (large)</span>
       <div class="size-select show">
@@ -835,7 +895,7 @@
       </div>
       <button class="add-to-cart-btn" onclick="addToCartWithSize('Chocolate Crinkle Cookies', 'size-crinkle')">Add to Cart</button>
     </li>
-    <li data-product="Cookie Assortment" data-price="8" data-has-size="true">
+    <li data-product="Cookie Assortment" data-price="8" data-has-size="true" data-category="cookies all">
       <strong>Cookie Assortment</strong>
       <span class="price">$6-10 (small) / $10-18 (large)</span>
       <div class="size-select show">
@@ -1318,12 +1378,18 @@
       createdAt: new Date().toISOString()
     };
 
+    // Check if user already exists
+    const existingUser = findUser(email) || findUser(phone);
+    const isNewUser = !existingUser;
+
     // Save user
     saveUser(user);
     saveUserToList(user);
 
-    // Submit to Netlify Forms
-    this.submit();
+    // Only submit to Netlify Forms if it's a new user (to avoid duplicate notifications)
+    if (isNewUser) {
+      this.submit();
+    }
 
     // Show success with personalized message
     const signupSuccessText = document.getElementById('signupSuccessText');
@@ -1458,21 +1524,41 @@
     const orderTotalInput = document.getElementById('orderTotalInput');
     const orderItemsFormattedInput = document.getElementById('orderItemsFormattedInput');
 
-    // Calculate subtotal
+    // Calculate subtotal and combine duplicate items
     let subtotal = 0;
     let summaryHTML = '<h3>Order Summary</h3>';
-    let formattedItems = [];
+    
+    // Combine duplicate items
+    const itemMap = new Map();
     cart.forEach(item => {
-      const itemTotal = item.price * item.quantity;
-      subtotal += itemTotal;
+      const key = `${item.name}|${item.size || ''}`;
+      if (itemMap.has(key)) {
+        const existing = itemMap.get(key);
+        existing.quantity += item.quantity;
+        existing.total += item.price * item.quantity;
+      } else {
+        itemMap.set(key, {
+          name: item.name,
+          size: item.size || '',
+          quantity: item.quantity,
+          price: item.price,
+          total: item.price * item.quantity
+        });
+      }
+    });
+    
+    // Build summary and formatted items
+    let formattedItems = [];
+    itemMap.forEach(item => {
+      subtotal += item.total;
       const sizeText = item.size ? ` (${item.size})` : '';
       summaryHTML += `
         <div class="order-summary-item">
           <span>${item.name}${sizeText} x${item.quantity}</span>
-          <span>$${itemTotal.toFixed(2)}</span>
+          <span>$${item.total.toFixed(2)}</span>
         </div>
       `;
-      formattedItems.push(`${item.name}${sizeText} x${item.quantity} - $${itemTotal.toFixed(2)}`);
+      formattedItems.push(`${item.name}${sizeText} x${item.quantity} - $${item.total.toFixed(2)}`);
     });
     
     summaryHTML += `
@@ -1876,8 +1962,6 @@
     const finalTotal = subtotal + deliveryFee;
     
     // Build complete formatted order (this is what appears in email)
-    const baseFormatted = currentFormatted.replace(/\n\nSubtotal:.*/, '');
-    
     let completeOrder = `ORDER DETAILS\n${'='.repeat(50)}\n\n`;
     completeOrder += `CUSTOMER INFORMATION\n${'-'.repeat(50)}\n`;
     completeOrder += `Name: ${currentUser.name}\n`;
@@ -1885,8 +1969,31 @@
     completeOrder += `Phone: ${currentUser.phone}\n`;
     completeOrder += `Zip Code: ${currentUser.zipcode}\n\n`;
     
+    // Combine duplicate items for email
+    const itemMap = new Map();
+    cart.forEach(item => {
+      const key = `${item.name}|${item.size || ''}`;
+      if (itemMap.has(key)) {
+        const existing = itemMap.get(key);
+        existing.quantity += item.quantity;
+        existing.total += item.price * item.quantity;
+      } else {
+        itemMap.set(key, {
+          name: item.name,
+          size: item.size || '',
+          quantity: item.quantity,
+          price: item.price,
+          total: item.price * item.quantity
+        });
+      }
+    });
+    
     completeOrder += `ORDER ITEMS\n${'-'.repeat(50)}\n`;
-    completeOrder += baseFormatted + '\n\n';
+    itemMap.forEach(item => {
+      const sizeText = item.size ? ` (${item.size})` : '';
+      completeOrder += `${item.name}${sizeText} x${item.quantity} - $${item.total.toFixed(2)}\n`;
+    });
+    completeOrder += '\n';
     
     completeOrder += `ORDER INFORMATION\n${'-'.repeat(50)}\n`;
     completeOrder += `Order Type: ${orderTypeText}\n`;
@@ -1949,9 +2056,47 @@
     if (e.target === this) closeCheckout();
   });
 
+  // Product Category Filter
+  function filterProducts(category) {
+    const products = document.querySelectorAll('#productsList li');
+    const comingSoon = document.getElementById('comingSoonMessage');
+    const categoryButtons = document.querySelectorAll('.category-btn');
+    
+    // Update active button
+    categoryButtons.forEach(btn => {
+      btn.classList.remove('active');
+      if (btn.dataset.category === category) {
+        btn.classList.add('active');
+      }
+    });
+    
+    let hasProducts = false;
+    
+    products.forEach(product => {
+      const productCategories = product.dataset.category.split(' ');
+      if (category === 'all' || productCategories.includes(category)) {
+        product.style.display = 'flex';
+        hasProducts = true;
+      } else {
+        product.style.display = 'none';
+      }
+    });
+    
+    // Show/hide "coming soon" message
+    if (hasProducts) {
+      comingSoon.style.display = 'none';
+    } else {
+      comingSoon.style.display = 'block';
+    }
+    
+    // Scroll to products section
+    document.getElementById('menu').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
   // Initialize
   loadUser();
   updateCart();
+  filterProducts('all'); // Show all products by default
 </script>
 
 </body>

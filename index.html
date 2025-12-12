@@ -744,6 +744,7 @@
   <a href="#menu">Products</a>
   <a href="#order">Order</a>
   <a href="#contact">Contact</a>
+  <a href="#" onclick="event.preventDefault(); openSignup();">Sign Up</a>
 </nav>
 
 <div class="cart-icon" onclick="toggleCart()">
@@ -1007,6 +1008,7 @@
             <span>Delivery</span>
           </label>
         </div>
+        <input type="hidden" name="orderType" id="orderTypeHidden">
       </div>
 
       <div id="pickupInfo" style="display: none; background: #d4edda; padding: 1rem; border-radius: 5px; margin-bottom: 1rem;">
@@ -1019,11 +1021,11 @@
           <input type="text" id="deliveryAddress" name="deliveryAddress" placeholder="Street address">
           <div class="error" id="deliveryAddressError">Please enter delivery address</div>
         </div>
-        <div class="form-group">
+        <div class="form-group" style="display: none;">
           <label for="deliveryCity">City *</label>
           <input type="text" id="deliveryCity" name="deliveryCity" placeholder="City" value="Las Vegas" readonly style="background: #f0f0f0;">
         </div>
-        <div class="form-group">
+        <div class="form-group" style="display: none;">
           <label for="deliveryState">State *</label>
           <input type="text" id="deliveryState" name="deliveryState" placeholder="State" value="NV" readonly style="background: #f0f0f0;">
         </div>
@@ -1070,16 +1072,14 @@
         <div class="error" id="paymentMethodError">Please select a payment method</div>
       </div>
 
+      <!-- Clean formatted order information (this is what appears in email) -->
+      <input type="hidden" name="orderItemsFormatted" id="orderItemsFormattedInput">
+      
+      <!-- Customer information -->
       <input type="hidden" name="customerName" id="customerNameInput">
       <input type="hidden" name="customerEmail" id="customerEmailInput">
       <input type="hidden" name="customerPhone" id="customerPhoneInput">
       <input type="hidden" name="customerZip" id="customerZipInput">
-      <input type="hidden" name="orderItems" id="orderItemsInput">
-      <input type="hidden" name="orderItemsFormatted" id="orderItemsFormattedInput">
-      <input type="hidden" name="orderTotal" id="orderTotalInput">
-      <input type="hidden" name="orderType" id="orderTypeInput">
-      <input type="hidden" name="orderDateFormatted" id="orderDateFormattedInput">
-      <input type="hidden" name="orderTimeFormatted" id="orderTimeFormattedInput">
 
 
       <button type="submit" class="submit-order-btn" id="submitOrderBtn">Submit Order</button>
@@ -1838,7 +1838,7 @@
     // Book the time slot
     bookTimeSlot(orderDate, orderTime);
 
-    // Format order details for email
+    // Format ALL order information into one clean field for email
     const orderTypeText = orderType.value === 'pickup' ? 'Pickup' : 'Delivery';
     const selectedTimeSlot = timeSlots.find(slot => slot.value === orderTime);
     const dateObj = new Date(orderDate);
@@ -1849,35 +1849,47 @@
     const orderItemsFormattedInput = document.getElementById('orderItemsFormattedInput');
     const currentFormatted = orderItemsFormattedInput.value;
     const subtotalMatch = currentFormatted.match(/Subtotal: \$([\d.]+)/);
-    const subtotal = parseFloat(subtotalMatch ? subtotalMatch[1] : document.getElementById('orderTotalInput').value) || 0;
+    const subtotal = parseFloat(subtotalMatch ? subtotalMatch[1] : 0) || 0;
     const deliveryFee = orderType.value === 'delivery' ? calculateDeliveryFee(subtotal) : 0;
     const finalTotal = subtotal + deliveryFee;
     
-    let orderDetails = `\n\nOrder Type: ${orderTypeText}\nDate: ${formattedDate}\nTime: ${selectedTimeSlot.label}\nPayment Method: ${paymentMethodText}`;
+    // Build complete formatted order (this is what appears in email)
+    const baseFormatted = currentFormatted.replace(/\n\nSubtotal:.*/, '');
     
-    if (orderType.value === 'delivery' && deliveryFee > 0) {
-      orderDetails += `\nDelivery Fee: $${deliveryFee.toFixed(2)}`;
-    } else if (orderType.value === 'delivery' && deliveryFee === 0) {
-      orderDetails += `\nDelivery Fee: FREE (Order over $100)`;
-    }
+    let completeOrder = `ORDER DETAILS\n${'='.repeat(50)}\n\n`;
+    completeOrder += `CUSTOMER INFORMATION\n${'-'.repeat(50)}\n`;
+    completeOrder += `Name: ${currentUser.name}\n`;
+    completeOrder += `Email: ${currentUser.email}\n`;
+    completeOrder += `Phone: ${currentUser.phone}\n`;
+    completeOrder += `Zip Code: ${currentUser.zipcode}\n\n`;
     
-    orderDetails += `\nTotal: $${finalTotal.toFixed(2)}`;
+    completeOrder += `ORDER ITEMS\n${'-'.repeat(50)}\n`;
+    completeOrder += baseFormatted + '\n\n';
     
-    let deliveryInfo = '';
+    completeOrder += `ORDER INFORMATION\n${'-'.repeat(50)}\n`;
+    completeOrder += `Order Type: ${orderTypeText}\n`;
+    completeOrder += `Date: ${formattedDate}\n`;
+    completeOrder += `Time: ${selectedTimeSlot.label}\n`;
+    completeOrder += `Payment Method: ${paymentMethodText}\n`;
+    
     if (orderType.value === 'delivery') {
       const fullAddress = `${deliveryAddress}, Las Vegas, NV ${deliveryZip}`;
       document.getElementById('deliveryAddress').value = fullAddress;
-      deliveryInfo = `\nDelivery Address: ${fullAddress}`;
+      completeOrder += `Delivery Address: ${fullAddress}\n`;
+      if (deliveryFee > 0) {
+        completeOrder += `Delivery Fee: $${deliveryFee.toFixed(2)}\n`;
+      } else {
+        completeOrder += `Delivery Fee: FREE (Order over $100)\n`;
+      }
     } else {
-      deliveryInfo = '\nPickup: Address will be sent via text upon order confirmation';
+      completeOrder += `Pickup: Address will be sent via text upon order confirmation\n`;
     }
-
-    // Update formatted order items (remove old subtotal line and add new details)
-    const baseFormatted = currentFormatted.replace(/\n\nSubtotal:.*/, '');
-    orderItemsFormattedInput.value = `${baseFormatted}${orderDetails}${deliveryInfo}`;
     
-    // Update final total in hidden field
-    document.getElementById('orderTotalInput').value = finalTotal.toFixed(2);
+    completeOrder += `\nTOTAL: $${finalTotal.toFixed(2)}\n`;
+    completeOrder += `\n${'='.repeat(50)}`;
+    
+    // Set the complete formatted order (this is the main field to read in email)
+    orderItemsFormattedInput.value = completeOrder;
 
     // Set hidden form fields
     document.getElementById('orderTypeInput').value = orderTypeText;

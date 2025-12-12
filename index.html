@@ -851,7 +851,7 @@
     <p><strong>Email:</strong> <a href="mailto:thedailybatchbakery@gmail.com">thedailybatchbakery@gmail.com</a></p>
     <p><strong>Text:</strong> <a href="sms:7025129694">Text Crosbie at (702) 512-9694</a></p>
   </div>
-  <p style="margin-top: 1.5rem;"><strong>Delivery:</strong> Orders can be picked up in person or delivered. Delivery fee is $10 for orders under $50. Free delivery for orders over $50! Minimum 2 days advance notice required.</p>
+  <p style="margin-top: 1.5rem;"><strong>Delivery:</strong> Orders can be picked up in person or delivered. Delivery fee is $10. Free delivery for orders over $100! Minimum order of $40 for delivery. Minimum 2 days advance notice required.</p>
 </section>
 
 <section id="contact" class="section">
@@ -859,6 +859,7 @@
   <div class="contact-info">
     <p><strong>Email:</strong> <a href="mailto:thedailybatchbakery@gmail.com">thedailybatchbakery@gmail.com</a></p>
     <p><strong>Phone:</strong> <a href="sms:7025129694">Text Crosbie at (702) 512-9694</a></p>
+    <p><strong>Venmo:</strong> @Crosbie-Bohannon</p>
   </div>
 </section>
 
@@ -954,6 +955,11 @@
       <span>Total:</span>
       <span id="cartTotal">$0.00</span>
     </div>
+    <div style="margin: 1rem 0; padding: 1rem; background: #fff3cd; border-radius: 5px; text-align: center;">
+      <p style="margin: 0; font-size: 0.9rem; color: #856404;">
+        <strong>Payment:</strong> Venmo @Crosbie-Bohannon or Cash
+      </p>
+    </div>
     <button class="checkout-btn" id="checkoutBtn" onclick="openCheckout()" disabled>Checkout</button>
   </div>
 </div>
@@ -963,7 +969,7 @@
   <div class="checkout-form-container">
     <h2>Checkout</h2>
     <div class="success-message" id="successMessage">
-      Order submitted successfully! We'll contact you soon to confirm your order.
+      Order submitted successfully! You'll receive a text once your order and payment have been confirmed.
     </div>
 
     <div id="loginPrompt" class="login-prompt">
@@ -1043,6 +1049,27 @@
         <div class="error" id="orderTimeError">Please select a time</div>
       </div>
 
+      <div id="deliveryFeeDisplay" style="display: none; background: #fff3cd; padding: 1rem; border-radius: 5px; margin-bottom: 1rem;">
+        <p style="margin: 0; color: #856404;">
+          <strong>Delivery Fee:</strong> <span id="deliveryFeeAmount">$10.00</span>
+        </p>
+      </div>
+
+      <div class="form-group">
+        <label>Payment Method *</label>
+        <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+          <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+            <input type="radio" name="paymentMethod" value="cash" id="paymentCash" required>
+            <span>Cash</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+            <input type="radio" name="paymentMethod" value="venmo" id="paymentVenmo" required>
+            <span>Venmo (@Crosbie-Bohannon)</span>
+          </label>
+        </div>
+        <div class="error" id="paymentMethodError">Please select a payment method</div>
+      </div>
+
       <input type="hidden" name="customerName" id="customerNameInput">
       <input type="hidden" name="customerEmail" id="customerEmailInput">
       <input type="hidden" name="customerPhone" id="customerPhoneInput">
@@ -1054,9 +1081,6 @@
       <input type="hidden" name="orderDateFormatted" id="orderDateFormattedInput">
       <input type="hidden" name="orderTimeFormatted" id="orderTimeFormattedInput">
 
-      <div class="payment-placeholder">
-        <p>💳 Online payments coming soon</p>
-      </div>
 
       <button type="submit" class="submit-order-btn" id="submitOrderBtn">Submit Order</button>
     </form>
@@ -1411,13 +1435,13 @@
     const orderTotalInput = document.getElementById('orderTotalInput');
     const orderItemsFormattedInput = document.getElementById('orderItemsFormattedInput');
 
-    // Build order summary
-    let total = 0;
+    // Calculate subtotal
+    let subtotal = 0;
     let summaryHTML = '<h3>Order Summary</h3>';
     let formattedItems = [];
     cart.forEach(item => {
       const itemTotal = item.price * item.quantity;
-      total += itemTotal;
+      subtotal += itemTotal;
       const sizeText = item.size ? ` (${item.size})` : '';
       summaryHTML += `
         <div class="order-summary-item">
@@ -1427,21 +1451,37 @@
       `;
       formattedItems.push(`${item.name}${sizeText} x${item.quantity} - $${itemTotal.toFixed(2)}`);
     });
+    
     summaryHTML += `
+      <div class="order-summary-item" style="border-top: 1px solid #d9a86c; padding-top: 0.5rem; margin-top: 0.5rem;">
+        <span>Subtotal:</span>
+        <span>$${subtotal.toFixed(2)}</span>
+      </div>
+      <div id="deliveryFeeSummary" style="display: none;">
+        <div class="order-summary-item">
+          <span>Delivery Fee:</span>
+          <span id="deliveryFeeSummaryAmount">$10.00</span>
+        </div>
+      </div>
       <div class="order-summary-total">
         <span>Total:</span>
-        <span>$${total.toFixed(2)}</span>
+        <span id="orderTotalDisplay">$${subtotal.toFixed(2)}</span>
       </div>
     `;
     summary.innerHTML = summaryHTML;
 
-    // Set hidden form fields
+    // Set hidden form fields (subtotal only, delivery fee added later if needed)
     orderItemsInput.value = JSON.stringify(cart);
-    orderItemsFormattedInput.value = formattedItems.join('\n') + `\n\nTotal: $${total.toFixed(2)}`;
-    orderTotalInput.value = total.toFixed(2);
+    orderItemsFormattedInput.value = formattedItems.join('\n') + `\n\nSubtotal: $${subtotal.toFixed(2)}`;
+    orderTotalInput.value = subtotal.toFixed(2);
 
     // Initialize date picker
     initializeDatePicker();
+    
+    // Reset order type selection
+    document.getElementById('orderTypePickup').checked = false;
+    document.getElementById('orderTypeDelivery').checked = false;
+    handleOrderTypeChange();
     
     modal.classList.add('show');
     closeCart();
@@ -1618,6 +1658,76 @@
     }
   }
 
+  // Calculate delivery fee
+  function calculateDeliveryFee(subtotal) {
+    const DELIVERY_FEE = 10.00;
+    const FREE_DELIVERY_THRESHOLD = 100.00;
+    const MIN_DELIVERY_ORDER = 40.00;
+
+    if (subtotal >= FREE_DELIVERY_THRESHOLD) {
+      return 0;
+    }
+    return DELIVERY_FEE;
+  }
+
+  // Update order total with delivery fee
+  function updateOrderTotal() {
+    const orderType = document.querySelector('input[name="orderType"]:checked');
+    const subtotal = parseFloat(document.getElementById('orderTotalInput').value) || 0;
+    const deliveryFeeDisplay = document.getElementById('deliveryFeeDisplay');
+    const deliveryFeeSummary = document.getElementById('deliveryFeeSummary');
+    const deliveryFeeSummaryAmount = document.getElementById('deliveryFeeSummaryAmount');
+    const orderTotalDisplay = document.getElementById('orderTotalDisplay');
+    const orderTotalInput = document.getElementById('orderTotalInput');
+    const MIN_DELIVERY_ORDER = 40.00;
+
+    if (orderType && orderType.value === 'delivery') {
+      // Check minimum order for delivery
+      if (subtotal < MIN_DELIVERY_ORDER) {
+        deliveryFeeDisplay.style.display = 'block';
+        deliveryFeeDisplay.innerHTML = `
+          <p style="margin: 0; color: #721c24; background: #f8d7da; padding: 0.75rem; border-radius: 5px;">
+            <strong>Minimum order of $${MIN_DELIVERY_ORDER.toFixed(2)} required for delivery.</strong>
+            <br>Current subtotal: $${subtotal.toFixed(2)}
+          </p>
+        `;
+        deliveryFeeSummary.style.display = 'none';
+        orderTotalDisplay.textContent = `$${subtotal.toFixed(2)}`;
+        orderTotalInput.value = subtotal.toFixed(2);
+        return;
+      }
+
+      const deliveryFee = calculateDeliveryFee(subtotal);
+      const total = subtotal + deliveryFee;
+
+      deliveryFeeDisplay.style.display = 'block';
+      if (deliveryFee === 0) {
+        deliveryFeeDisplay.innerHTML = `
+          <p style="margin: 0; color: #155724;">
+            <strong>Free Delivery!</strong> (Order over $100)
+          </p>
+        `;
+        deliveryFeeSummary.style.display = 'none';
+      } else {
+        deliveryFeeDisplay.innerHTML = `
+          <p style="margin: 0; color: #856404;">
+            <strong>Delivery Fee:</strong> $${deliveryFee.toFixed(2)}
+          </p>
+        `;
+        deliveryFeeSummary.style.display = 'block';
+        deliveryFeeSummaryAmount.textContent = `$${deliveryFee.toFixed(2)}`;
+      }
+
+      orderTotalDisplay.textContent = `$${total.toFixed(2)}`;
+      orderTotalInput.value = total.toFixed(2);
+    } else {
+      deliveryFeeDisplay.style.display = 'none';
+      deliveryFeeSummary.style.display = 'none';
+      orderTotalDisplay.textContent = `$${subtotal.toFixed(2)}`;
+      orderTotalInput.value = subtotal.toFixed(2);
+    }
+  }
+
   // Handle order type change (pickup/delivery)
   function handleOrderTypeChange() {
     const pickupRadio = document.getElementById('orderTypePickup');
@@ -1632,11 +1742,18 @@
       deliveryAddressGroup.style.display = 'none';
       deliveryAddress.removeAttribute('required');
       deliveryZip.removeAttribute('required');
+      updateOrderTotal();
     } else if (deliveryRadio.checked) {
       pickupInfo.style.display = 'none';
       deliveryAddressGroup.style.display = 'block';
       deliveryAddress.setAttribute('required', 'required');
       deliveryZip.setAttribute('required', 'required');
+      updateOrderTotal();
+    } else {
+      pickupInfo.style.display = 'none';
+      deliveryAddressGroup.style.display = 'none';
+      deliveryAddress.removeAttribute('required');
+      deliveryZip.removeAttribute('required');
     }
   }
 
@@ -1690,7 +1807,16 @@
 
     // Validate delivery address if delivery selected
     if (orderType && orderType.value === 'delivery') {
+      const subtotal = parseFloat(document.getElementById('orderTotalInput').value) || 0;
+      const MIN_DELIVERY_ORDER = 40.00;
+
+      if (subtotal < MIN_DELIVERY_ORDER) {
+        document.getElementById('deliveryAddressError').textContent = `Minimum order of $${MIN_DELIVERY_ORDER.toFixed(2)} required for delivery`;
+        document.getElementById('deliveryAddressError').classList.add('show');
+        isValid = false;
+      }
       if (!deliveryAddress) {
+        document.getElementById('deliveryAddressError').textContent = 'Please enter delivery address';
         document.getElementById('deliveryAddressError').classList.add('show');
         isValid = false;
       }
@@ -1698,6 +1824,13 @@
         document.getElementById('deliveryZipError').classList.add('show');
         isValid = false;
       }
+    }
+
+    // Validate payment method
+    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+    if (!paymentMethod) {
+      document.getElementById('paymentMethodError').classList.add('show');
+      isValid = false;
     }
 
     if (!isValid) return;
@@ -1710,7 +1843,25 @@
     const selectedTimeSlot = timeSlots.find(slot => slot.value === orderTime);
     const dateObj = new Date(orderDate);
     const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    const orderDetails = `\n\nOrder Type: ${orderTypeText}\nDate: ${formattedDate}\nTime: ${selectedTimeSlot.label}`;
+    const paymentMethodText = paymentMethod.value === 'cash' ? 'Cash' : 'Venmo (@Crosbie-Bohannon)';
+    
+    // Calculate totals
+    const orderItemsFormattedInput = document.getElementById('orderItemsFormattedInput');
+    const currentFormatted = orderItemsFormattedInput.value;
+    const subtotalMatch = currentFormatted.match(/Subtotal: \$([\d.]+)/);
+    const subtotal = parseFloat(subtotalMatch ? subtotalMatch[1] : document.getElementById('orderTotalInput').value) || 0;
+    const deliveryFee = orderType.value === 'delivery' ? calculateDeliveryFee(subtotal) : 0;
+    const finalTotal = subtotal + deliveryFee;
+    
+    let orderDetails = `\n\nOrder Type: ${orderTypeText}\nDate: ${formattedDate}\nTime: ${selectedTimeSlot.label}\nPayment Method: ${paymentMethodText}`;
+    
+    if (orderType.value === 'delivery' && deliveryFee > 0) {
+      orderDetails += `\nDelivery Fee: $${deliveryFee.toFixed(2)}`;
+    } else if (orderType.value === 'delivery' && deliveryFee === 0) {
+      orderDetails += `\nDelivery Fee: FREE (Order over $100)`;
+    }
+    
+    orderDetails += `\nTotal: $${finalTotal.toFixed(2)}`;
     
     let deliveryInfo = '';
     if (orderType.value === 'delivery') {
@@ -1721,10 +1872,12 @@
       deliveryInfo = '\nPickup: Address will be sent via text upon order confirmation';
     }
 
-    // Update formatted order items
-    const orderItemsFormattedInput = document.getElementById('orderItemsFormattedInput');
-    const currentFormatted = orderItemsFormattedInput.value;
-    orderItemsFormattedInput.value = `${currentFormatted}${orderDetails}${deliveryInfo}`;
+    // Update formatted order items (remove old subtotal line and add new details)
+    const baseFormatted = currentFormatted.replace(/\n\nSubtotal:.*/, '');
+    orderItemsFormattedInput.value = `${baseFormatted}${orderDetails}${deliveryInfo}`;
+    
+    // Update final total in hidden field
+    document.getElementById('orderTotalInput').value = finalTotal.toFixed(2);
 
     // Set hidden form fields
     document.getElementById('orderTypeInput').value = orderTypeText;

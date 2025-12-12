@@ -713,11 +713,15 @@
       }
 
       .cart-icon {
-        top: 0.5rem;
-        right: 0.5rem;
         width: 50px;
         height: 50px;
         font-size: 1.2rem;
+      }
+
+      #userStatusIndicator {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+        max-width: 200px;
       }
 
       .cart-sidebar {
@@ -747,9 +751,14 @@
   <a href="#" onclick="event.preventDefault(); openSignup();">Sign Up</a>
 </nav>
 
-<div class="cart-icon" onclick="toggleCart()">
-  🛒
-  <span class="cart-badge hidden" id="cartBadge">0</span>
+<div style="position: fixed; top: 1rem; right: 1rem; z-index: 1000; display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
+  <div id="userStatusIndicator" style="display: none; background: #d4edda; color: #155724; padding: 0.5rem 1rem; border-radius: 5px; font-size: 0.9rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+    <span id="userStatusText"></span>
+  </div>
+  <div class="cart-icon" onclick="toggleCart()">
+    🛒
+    <span class="cart-badge hidden" id="cartBadge">0</span>
+  </div>
 </div>
 
 <section class="hero">
@@ -876,7 +885,7 @@
     </div>
 
     <div class="success-message" id="signupSuccess">
-      Account created successfully! You can now proceed to checkout.
+      <span id="signupSuccessText">Account created successfully! You can now proceed to checkout.</span>
     </div>
 
     <form name="signup" netlify netlify-honeypot="bot-field" id="signupForm">
@@ -970,7 +979,7 @@
   <div class="checkout-form-container">
     <h2>Checkout</h2>
     <div class="success-message" id="successMessage">
-      Order submitted successfully! You'll receive a text once your order and payment have been confirmed.
+      <span id="successMessageText">Order submitted successfully! You'll receive a text once your order and payment have been confirmed.</span>
     </div>
 
     <div id="loginPrompt" class="login-prompt">
@@ -1080,6 +1089,9 @@
       <input type="hidden" name="customerEmail" id="customerEmailInput">
       <input type="hidden" name="customerPhone" id="customerPhoneInput">
       <input type="hidden" name="customerZip" id="customerZipInput">
+      
+      <!-- Internal calculation fields (not shown in email) -->
+      <input type="hidden" id="orderTotalInput">
 
 
       <button type="submit" class="submit-order-btn" id="submitOrderBtn">Submit Order</button>
@@ -1217,11 +1229,13 @@
     errorElements.forEach(el => el.classList.remove('show'));
   }
 
-  // Update user display in checkout
+  // Update user display in checkout and status indicator
   function updateUserDisplay() {
     const loginPrompt = document.getElementById('loginPrompt');
     const userInfoDisplay = document.getElementById('userInfoDisplay');
     const checkoutForm = document.getElementById('checkoutForm');
+    const userStatusIndicator = document.getElementById('userStatusIndicator');
+    const userStatusText = document.getElementById('userStatusText');
 
     if (currentUser) {
       loginPrompt.style.display = 'none';
@@ -1238,10 +1252,17 @@
       document.getElementById('customerEmailInput').value = currentUser.email;
       document.getElementById('customerPhoneInput').value = currentUser.phone;
       document.getElementById('customerZipInput').value = currentUser.zipcode;
+      
+      // Update user status indicator
+      userStatusIndicator.style.display = 'block';
+      userStatusText.textContent = `Welcome back, ${currentUser.name}!`;
     } else {
       loginPrompt.style.display = 'block';
       userInfoDisplay.style.display = 'none';
       checkoutForm.style.display = 'none';
+      
+      // Hide user status indicator
+      userStatusIndicator.style.display = 'none';
     }
   }
 
@@ -1304,14 +1325,16 @@
     // Submit to Netlify Forms
     this.submit();
 
-    // Show success and close modal
+    // Show success with personalized message
+    const signupSuccessText = document.getElementById('signupSuccessText');
+    signupSuccessText.textContent = `Thank you ${name} for signing up! You can now proceed to checkout.`;
     document.getElementById('signupSuccess').classList.add('show');
     setTimeout(() => {
       closeSignup();
       if (document.getElementById('checkoutModal').classList.contains('show')) {
         updateUserDisplay();
       }
-    }, 2000);
+    }, 3000);
   });
 
   // Login Form Handler
@@ -1471,7 +1494,6 @@
     summary.innerHTML = summaryHTML;
 
     // Set hidden form fields (subtotal only, delivery fee added later if needed)
-    orderItemsInput.value = JSON.stringify(cart);
     orderItemsFormattedInput.value = formattedItems.join('\n') + `\n\nSubtotal: $${subtotal.toFixed(2)}`;
     orderTotalInput.value = subtotal.toFixed(2);
 
@@ -1891,15 +1913,13 @@
     // Set the complete formatted order (this is the main field to read in email)
     orderItemsFormattedInput.value = completeOrder;
 
-    // Set hidden form fields
-    document.getElementById('orderTypeInput').value = orderTypeText;
-    document.getElementById('orderDateFormattedInput').value = formattedDate;
-    document.getElementById('orderTimeFormattedInput').value = selectedTimeSlot.label;
-
     // Submit form
     this.submit();
     
-    // Show success message
+    // Show personalized success message
+    const successMessageText = document.getElementById('successMessageText');
+    const customerName = currentUser ? currentUser.name : 'Customer';
+    successMessageText.textContent = `Thank you ${customerName}! Your order has been received. You'll receive a text once your order and payment have been confirmed.`;
     document.getElementById('successMessage').classList.add('show');
     document.getElementById('submitOrderBtn').disabled = true;
     
@@ -1913,7 +1933,7 @@
       document.getElementById('successMessage').classList.remove('show');
       document.getElementById('submitOrderBtn').disabled = false;
       handleOrderTypeChange(); // Reset form state
-    }, 3000);
+    }, 4000);
   });
 
   // Close modals when clicking outside

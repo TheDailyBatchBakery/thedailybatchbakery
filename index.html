@@ -5,14 +5,198 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Daily Batch Bakery</title>
   <style>
-    body { margin:0; font-family:Arial,sans-serif; background:#faf7f2; color:#333; }
-    header { background:#d9a86c; color:white; padding:2rem; text-align:center; }
-    nav { background:#b18458; display:flex; justify-content:center; gap:2rem; padding:1rem; }
-    nav a { color:white; text-decoration:none; font-weight:bold; }
-    .hero { padding:4rem 2rem; text-align:center; background:#fff; }
-    .hero h1 { font-size:3rem; margin-bottom:1rem; }
-    .section { padding:3rem 2rem; max-width:900px; margin:auto; }
-    footer { background:#b18458; color:white; padding:2rem; text-align:center; margin-top:3rem; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #faf7f2;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, #d9a86c 0%, #b18458 100%);
+      color: white;
+      padding: 3rem 2rem;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    header p {
+      font-size: 1.2rem;
+      font-style: italic;
+    }
+
+    nav {
+      background: #b18458;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      padding: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    nav a:hover {
+      background-color: rgba(255,255,255,0.2);
+      transform: translateY(-2px);
+    }
+
+    .hero {
+      padding: 5rem 2rem;
+      text-align: center;
+      background: linear-gradient(to bottom, #fff 0%, #faf7f2 100%);
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #b18458;
+    }
+
+    .hero p {
+      font-size: 1.3rem;
+      color: #666;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .section {
+      padding: 4rem 2rem;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .section h2 {
+      font-size: 2rem;
+      color: #b18458;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 3px solid #d9a86c;
+    }
+
+    .section p {
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    #menu ul {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    #menu li {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    #menu li:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    }
+
+    #menu li strong {
+      display: block;
+      color: #b18458;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .price {
+      color: #d9a86c;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .contact-info {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-top: 1rem;
+    }
+
+    .contact-info p {
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .contact-info a {
+      color: #b18458;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .contact-info a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      background: #b18458;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2rem;
+      }
+
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      nav {
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      nav a {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
+      }
+
+      #menu ul {
+        grid-template-columns: 1fr;
+      }
+
+      .section {
+        padding: 2rem 1rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -31,41 +215,72 @@
 
 <section class="hero">
   <h1>Welcome to The Daily Batch Bakery</h1>
-  <p>Small‑batch breads and baked goods, made fresh for your table.</p>
+  <p>Small-batch breads and baked goods, made fresh for your table.</p>
 </section>
 
 <section id="about" class="section">
   <h2>About Us</h2>
-  <p>The Daily Batch Bakery is a home‑based micro‑bakery offering handcrafted loaves, rolls, sweet treats, and rotating specials. Everything is baked in small batches with high-quality ingerdients and a commitment to freshness.</p>
+  <p>The Daily Batch Bakery is a home-based micro-bakery offering handcrafted loaves, rolls, sweet treats, and rotating specials. Everything is baked in small batches with high-quality ingredients and a commitment to freshness.</p>
 </section>
 
 <section id="menu" class="section">
   <h2>Our Products</h2>
   <ul>
-    <li><strong>Lemon Loaf</strong> – $5</li>
-    <li><strong>Banana Bread</strong> – $5</li>
-    <li><strong>Dinner Rolls</strong> – $5</li>
-    <li><strong>Cinnamon Rolls</strong> – $12</li>
-    <li><strong>Pecan Rolls </strong> – $12</li>
-    <li><strong>Chocolate Chip</strong> – $6-10  $10-18 </li>
-    <li><strong>Peanut Butter</strong> – $6-10  $10-18 </li>
-    <li><strong>Chocolate Chrinkle</strong> – $6-10  $10-18 </li>
-    <li><strong>Assortment</strong> – $6-10  $10-18 </li>
+    <li>
+      <strong>Lemon Loaf</strong>
+      <span class="price">$5</span>
+    </li>
+    <li>
+      <strong>Banana Bread</strong>
+      <span class="price">$5</span>
+    </li>
+    <li>
+      <strong>Dinner Rolls</strong>
+      <span class="price">$5</span>
+    </li>
+    <li>
+      <strong>Cinnamon Rolls</strong>
+      <span class="price">$12</span>
+    </li>
+    <li>
+      <strong>Pecan Rolls</strong>
+      <span class="price">$12</span>
+    </li>
+    <li>
+      <strong>Chocolate Chip Cookies</strong>
+      <span class="price">$6-10 (small) / $10-18 (large)</span>
+    </li>
+    <li>
+      <strong>Peanut Butter Cookies</strong>
+      <span class="price">$6-10 (small) / $10-18 (large)</span>
+    </li>
+    <li>
+      <strong>Chocolate Crinkle Cookies</strong>
+      <span class="price">$6-10 (small) / $10-18 (large)</span>
+    </li>
+    <li>
+      <strong>Cookie Assortment</strong>
+      <span class="price">$6-10 (small) / $10-18 (large)</span>
+    </li>
   </ul>
 </section>
 
 <section id="order" class="section">
   <h2>How to Order</h2>
   <p>Send us a message with the items you want and your preferred pickup day.</p>
-  <p><strong>Email:</strong> thedailybatchbakery@gmail.com</p>
-  <p><strong>Text:</strong> Text Crosbie at 702_512_9694</p>
-  <p>Orders can be picked up in person or dropped off for $10 delivery orders over $50 free delivery!</p>
+  <div class="contact-info">
+    <p><strong>Email:</strong> <a href="mailto:thedailybatchbakery@gmail.com">thedailybatchbakery@gmail.com</a></p>
+    <p><strong>Text:</strong> <a href="tel:7025129694">Text Crosbie at (702) 512-9694</a></p>
+  </div>
+  <p style="margin-top: 1.5rem;"><strong>Delivery:</strong> Orders can be picked up in person or delivered. Delivery fee is $10 for orders under $50. Free delivery for orders over $50!</p>
 </section>
 
 <section id="contact" class="section">
   <h2>Contact Us</h2>
-  <p><strong>Email:</strong> thedailybatchbakery@gmail.com</p>
-  <p><strong>Phone:</strong> Text Crosbie at 702_512_9694</p>
+  <div class="contact-info">
+    <p><strong>Email:</strong> <a href="mailto:thedailybatchbakery@gmail.com">thedailybatchbakery@gmail.com</a></p>
+    <p><strong>Phone:</strong> <a href="tel:7025129694">Text Crosbie at (702) 512-9694</a></p>
+  </div>
 </section>
 
 <footer>

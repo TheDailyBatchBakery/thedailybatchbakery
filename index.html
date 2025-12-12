@@ -324,7 +324,8 @@
       color: #333;
     }
 
-    .form-group input {
+    .form-group input,
+    .form-group select {
       width: 100%;
       padding: 0.75rem;
       border: 2px solid #d9a86c;
@@ -332,9 +333,15 @@
       font-size: 1rem;
     }
 
-    .form-group input:focus {
+    .form-group input:focus,
+    .form-group select:focus {
       outline: none;
       border-color: #b18458;
+    }
+
+    .form-group input[type="radio"] {
+      width: auto;
+      margin-right: 0.5rem;
     }
 
     .form-group .error {
@@ -835,12 +842,16 @@
 
 <section id="order" class="section">
   <h2>How to Order</h2>
-  <p>Add items to your cart and checkout, or send us a message with the items you want and your preferred pickup day.</p>
-  <div class="contact-info">
+  <p><strong>Step 1:</strong> Create an account by clicking "Sign Up" (we only deliver to Las Vegas, Nevada)</p>
+  <p><strong>Step 2:</strong> Browse our products and add items to your cart</p>
+  <p><strong>Step 3:</strong> Click the cart icon and proceed to checkout</p>
+  <p><strong>Step 4:</strong> Select pickup or delivery, choose your date and time, then submit your order</p>
+  <p style="margin-top: 1rem;">You'll receive a confirmation text with pickup details or delivery information.</p>
+  <div class="contact-info" style="margin-top: 1.5rem;">
     <p><strong>Email:</strong> <a href="mailto:thedailybatchbakery@gmail.com">thedailybatchbakery@gmail.com</a></p>
     <p><strong>Text:</strong> <a href="sms:7025129694">Text Crosbie at (702) 512-9694</a></p>
   </div>
-  <p style="margin-top: 1.5rem;"><strong>Delivery:</strong> Orders can be picked up in person or delivered. Delivery fee is $10 for orders under $50. Free delivery for orders over $50!</p>
+  <p style="margin-top: 1.5rem;"><strong>Delivery:</strong> Orders can be picked up in person or delivered. Delivery fee is $10 for orders under $50. Free delivery for orders over $50! Minimum 2 days advance notice required.</p>
 </section>
 
 <section id="contact" class="section">
@@ -978,12 +989,70 @@
       
       <div class="order-summary" id="orderSummary"></div>
 
+      <div class="form-group">
+        <label>Pickup or Delivery *</label>
+        <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+          <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+            <input type="radio" name="orderType" value="pickup" id="orderTypePickup" required onchange="handleOrderTypeChange()">
+            <span>Pickup</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+            <input type="radio" name="orderType" value="delivery" id="orderTypeDelivery" required onchange="handleOrderTypeChange()">
+            <span>Delivery</span>
+          </label>
+        </div>
+      </div>
+
+      <div id="pickupInfo" style="display: none; background: #d4edda; padding: 1rem; border-radius: 5px; margin-bottom: 1rem;">
+        <p style="margin: 0; color: #155724;"><strong>Pickup:</strong> Upon order confirmation you'll receive a text with the pickup address and instructions to call upon arrival.</p>
+      </div>
+
+      <div id="deliveryAddressGroup" style="display: none;">
+        <div class="form-group">
+          <label for="deliveryAddress">Delivery Address *</label>
+          <input type="text" id="deliveryAddress" name="deliveryAddress" placeholder="Street address">
+          <div class="error" id="deliveryAddressError">Please enter delivery address</div>
+        </div>
+        <div class="form-group">
+          <label for="deliveryCity">City *</label>
+          <input type="text" id="deliveryCity" name="deliveryCity" placeholder="City" value="Las Vegas" readonly style="background: #f0f0f0;">
+        </div>
+        <div class="form-group">
+          <label for="deliveryState">State *</label>
+          <input type="text" id="deliveryState" name="deliveryState" placeholder="State" value="NV" readonly style="background: #f0f0f0;">
+        </div>
+        <div class="form-group">
+          <label for="deliveryZip">Zip Code *</label>
+          <input type="text" id="deliveryZip" name="deliveryZip" placeholder="Zip Code" maxlength="5" pattern="[0-9]{5}">
+          <div class="error" id="deliveryZipError">Please enter a valid zip code</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="orderDate">Select Date *</label>
+        <input type="date" id="orderDate" name="orderDate" required onchange="validateAndUpdateDate()">
+        <div class="error" id="orderDateError">Please select a date</div>
+        <small style="color: #666; font-size: 0.9rem; display: block; margin-top: 0.25rem;">Minimum 2 days advance notice required</small>
+      </div>
+
+      <div class="form-group">
+        <label for="orderTime">Select Time *</label>
+        <select id="orderTime" name="orderTime" required>
+          <option value="">Select a time</option>
+        </select>
+        <div class="error" id="orderTimeError">Please select a time</div>
+      </div>
+
       <input type="hidden" name="customerName" id="customerNameInput">
       <input type="hidden" name="customerEmail" id="customerEmailInput">
       <input type="hidden" name="customerPhone" id="customerPhoneInput">
       <input type="hidden" name="customerZip" id="customerZipInput">
       <input type="hidden" name="orderItems" id="orderItemsInput">
+      <input type="hidden" name="orderItemsFormatted" id="orderItemsFormattedInput">
       <input type="hidden" name="orderTotal" id="orderTotalInput">
+      <input type="hidden" name="orderType" id="orderTypeInput">
+      <input type="hidden" name="orderDateFormatted" id="orderDateFormattedInput">
+      <input type="hidden" name="orderTimeFormatted" id="orderTimeFormattedInput">
 
       <div class="payment-placeholder">
         <p>💳 Online payments coming soon</p>
@@ -1340,10 +1409,12 @@
     const summary = document.getElementById('orderSummary');
     const orderItemsInput = document.getElementById('orderItemsInput');
     const orderTotalInput = document.getElementById('orderTotalInput');
+    const orderItemsFormattedInput = document.getElementById('orderItemsFormattedInput');
 
     // Build order summary
     let total = 0;
     let summaryHTML = '<h3>Order Summary</h3>';
+    let formattedItems = [];
     cart.forEach(item => {
       const itemTotal = item.price * item.quantity;
       total += itemTotal;
@@ -1354,6 +1425,7 @@
           <span>$${itemTotal.toFixed(2)}</span>
         </div>
       `;
+      formattedItems.push(`${item.name}${sizeText} x${item.quantity} - $${itemTotal.toFixed(2)}`);
     });
     summaryHTML += `
       <div class="order-summary-total">
@@ -1365,8 +1437,12 @@
 
     // Set hidden form fields
     orderItemsInput.value = JSON.stringify(cart);
+    orderItemsFormattedInput.value = formattedItems.join('\n') + `\n\nTotal: $${total.toFixed(2)}`;
     orderTotalInput.value = total.toFixed(2);
 
+    // Initialize date picker
+    initializeDatePicker();
+    
     modal.classList.add('show');
     closeCart();
     updateUserDisplay();
@@ -1377,6 +1453,193 @@
     modal.classList.remove('show');
   }
 
+  // Holidays (blocked dates)
+  const holidays = [
+    '2025-01-01', // New Year's Day
+    '2025-01-20', // Martin Luther King Jr. Day
+    '2025-02-17', // Presidents' Day
+    '2025-05-26', // Memorial Day
+    '2025-07-04', // Independence Day
+    '2025-09-01', // Labor Day
+    '2025-10-13', // Columbus Day
+    '2025-11-11', // Veterans Day
+    '2025-11-27', // Thanksgiving
+    '2025-12-25', // Christmas
+    '2026-01-01', // New Year's Day
+    '2026-01-19', // Martin Luther King Jr. Day
+    '2026-02-16', // Presidents' Day
+    '2026-05-25', // Memorial Day
+    '2026-07-04', // Independence Day
+    '2026-09-07', // Labor Day
+    '2026-10-12', // Columbus Day
+    '2026-11-11', // Veterans Day
+    '2026-11-26', // Thanksgiving
+    '2026-12-25'  // Christmas
+  ];
+
+  // Time slots (9 AM - 5 PM hourly)
+  const timeSlots = [
+    { value: '09:00', label: '9:00 AM' },
+    { value: '10:00', label: '10:00 AM' },
+    { value: '11:00', label: '11:00 AM' },
+    { value: '12:00', label: '12:00 PM' },
+    { value: '13:00', label: '1:00 PM' },
+    { value: '14:00', label: '2:00 PM' },
+    { value: '15:00', label: '3:00 PM' },
+    { value: '16:00', label: '4:00 PM' },
+    { value: '17:00', label: '5:00 PM' }
+  ];
+
+  // Get booked time slots from localStorage
+  function getBookedSlots() {
+    const bookedStr = localStorage.getItem('bookedTimeSlots');
+    return bookedStr ? JSON.parse(bookedStr) : [];
+  }
+
+  // Save booked time slot
+  function bookTimeSlot(date, time) {
+    const booked = getBookedSlots();
+    const slotKey = `${date}_${time}`;
+    if (!booked.includes(slotKey)) {
+      booked.push(slotKey);
+      localStorage.setItem('bookedTimeSlots', JSON.stringify(booked));
+    }
+  }
+
+  // Check if time slot is booked
+  function isTimeSlotBooked(date, time) {
+    const booked = getBookedSlots();
+    const slotKey = `${date}_${time}`;
+    return booked.includes(slotKey);
+  }
+
+  // Check if date is a holiday
+  function isHoliday(dateStr) {
+    return holidays.includes(dateStr);
+  }
+
+  // Check if date is at least 2 days in advance
+  function isValidDate(dateStr) {
+    const selectedDate = new Date(dateStr);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    selectedDate.setHours(0, 0, 0, 0);
+    
+    const diffTime = selectedDate - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    return diffDays >= 2;
+  }
+
+  // Initialize date picker
+  function initializeDatePicker() {
+    const dateInput = document.getElementById('orderDate');
+    const today = new Date();
+    const minDate = new Date(today);
+    minDate.setDate(today.getDate() + 2); // 2 days from today
+    
+    const year = minDate.getFullYear();
+    const month = String(minDate.getMonth() + 1).padStart(2, '0');
+    const day = String(minDate.getDate()).padStart(2, '0');
+    const minDateStr = `${year}-${month}-${day}`;
+    
+    dateInput.setAttribute('min', minDateStr);
+    dateInput.value = '';
+    
+    // Update time slots when date changes
+    updateTimeSlots();
+  }
+
+  // Validate date and update time slots
+  function validateAndUpdateDate() {
+    const dateInput = document.getElementById('orderDate');
+    const selectedDate = dateInput.value;
+    const errorElement = document.getElementById('orderDateError');
+    
+    errorElement.classList.remove('show');
+    
+    if (!selectedDate) {
+      updateTimeSlots();
+      return;
+    }
+
+    // Validate date
+    if (!isValidDate(selectedDate)) {
+      errorElement.textContent = 'Please select a date at least 2 days in advance';
+      errorElement.classList.add('show');
+      updateTimeSlots();
+      return;
+    }
+
+    if (isHoliday(selectedDate)) {
+      errorElement.textContent = 'This date is a holiday and unavailable';
+      errorElement.classList.add('show');
+      updateTimeSlots();
+      return;
+    }
+
+    updateTimeSlots();
+  }
+
+  // Update time slots based on selected date
+  function updateTimeSlots() {
+    const dateInput = document.getElementById('orderDate');
+    const timeSelect = document.getElementById('orderTime');
+    const selectedDate = dateInput.value;
+    
+    // Clear existing options
+    timeSelect.innerHTML = '<option value="">Select a time</option>';
+    
+    if (!selectedDate) {
+      return;
+    }
+
+    // Only show time slots if date is valid
+    if (!isValidDate(selectedDate) || isHoliday(selectedDate)) {
+      return;
+    }
+
+    // Add available time slots
+    timeSlots.forEach(slot => {
+      if (!isTimeSlotBooked(selectedDate, slot.value)) {
+        const option = document.createElement('option');
+        option.value = slot.value;
+        option.textContent = slot.label;
+        timeSelect.appendChild(option);
+      }
+    });
+
+    if (timeSelect.options.length === 1) {
+      const option = document.createElement('option');
+      option.value = '';
+      option.textContent = 'No available time slots';
+      option.disabled = true;
+      timeSelect.appendChild(option);
+    }
+  }
+
+  // Handle order type change (pickup/delivery)
+  function handleOrderTypeChange() {
+    const pickupRadio = document.getElementById('orderTypePickup');
+    const deliveryRadio = document.getElementById('orderTypeDelivery');
+    const pickupInfo = document.getElementById('pickupInfo');
+    const deliveryAddressGroup = document.getElementById('deliveryAddressGroup');
+    const deliveryAddress = document.getElementById('deliveryAddress');
+    const deliveryZip = document.getElementById('deliveryZip');
+
+    if (pickupRadio.checked) {
+      pickupInfo.style.display = 'block';
+      deliveryAddressGroup.style.display = 'none';
+      deliveryAddress.removeAttribute('required');
+      deliveryZip.removeAttribute('required');
+    } else if (deliveryRadio.checked) {
+      pickupInfo.style.display = 'none';
+      deliveryAddressGroup.style.display = 'block';
+      deliveryAddress.setAttribute('required', 'required');
+      deliveryZip.setAttribute('required', 'required');
+    }
+  }
+
   // Order Form Handler
   document.getElementById('checkoutForm').addEventListener('submit', function(e) {
     e.preventDefault();
@@ -1385,6 +1648,88 @@
       openLogin();
       return;
     }
+
+    // Validate form fields
+    const orderType = document.querySelector('input[name="orderType"]:checked');
+    const orderDate = document.getElementById('orderDate').value;
+    const orderTime = document.getElementById('orderTime').value;
+    const deliveryAddress = document.getElementById('deliveryAddress').value;
+    const deliveryZip = document.getElementById('deliveryZip').value;
+
+    let isValid = true;
+    document.querySelectorAll('.error').forEach(el => el.classList.remove('show'));
+
+    // Validate order type
+    if (!orderType) {
+      isValid = false;
+    }
+
+    // Validate date
+    if (!orderDate) {
+      document.getElementById('orderDateError').classList.add('show');
+      isValid = false;
+    } else if (!isValidDate(orderDate)) {
+      document.getElementById('orderDateError').textContent = 'Please select a date at least 2 days in advance';
+      document.getElementById('orderDateError').classList.add('show');
+      isValid = false;
+    } else if (isHoliday(orderDate)) {
+      document.getElementById('orderDateError').textContent = 'This date is a holiday and unavailable';
+      document.getElementById('orderDateError').classList.add('show');
+      isValid = false;
+    }
+
+    // Validate time
+    if (!orderTime) {
+      document.getElementById('orderTimeError').classList.add('show');
+      isValid = false;
+    } else if (isTimeSlotBooked(orderDate, orderTime)) {
+      document.getElementById('orderTimeError').textContent = 'This time slot is already booked';
+      document.getElementById('orderTimeError').classList.add('show');
+      isValid = false;
+    }
+
+    // Validate delivery address if delivery selected
+    if (orderType && orderType.value === 'delivery') {
+      if (!deliveryAddress) {
+        document.getElementById('deliveryAddressError').classList.add('show');
+        isValid = false;
+      }
+      if (!deliveryZip || !isValidLasVegasZip(deliveryZip)) {
+        document.getElementById('deliveryZipError').classList.add('show');
+        isValid = false;
+      }
+    }
+
+    if (!isValid) return;
+
+    // Book the time slot
+    bookTimeSlot(orderDate, orderTime);
+
+    // Format order details for email
+    const orderTypeText = orderType.value === 'pickup' ? 'Pickup' : 'Delivery';
+    const selectedTimeSlot = timeSlots.find(slot => slot.value === orderTime);
+    const dateObj = new Date(orderDate);
+    const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    const orderDetails = `\n\nOrder Type: ${orderTypeText}\nDate: ${formattedDate}\nTime: ${selectedTimeSlot.label}`;
+    
+    let deliveryInfo = '';
+    if (orderType.value === 'delivery') {
+      const fullAddress = `${deliveryAddress}, Las Vegas, NV ${deliveryZip}`;
+      document.getElementById('deliveryAddress').value = fullAddress;
+      deliveryInfo = `\nDelivery Address: ${fullAddress}`;
+    } else {
+      deliveryInfo = '\nPickup: Address will be sent via text upon order confirmation';
+    }
+
+    // Update formatted order items
+    const orderItemsFormattedInput = document.getElementById('orderItemsFormattedInput');
+    const currentFormatted = orderItemsFormattedInput.value;
+    orderItemsFormattedInput.value = `${currentFormatted}${orderDetails}${deliveryInfo}`;
+
+    // Set hidden form fields
+    document.getElementById('orderTypeInput').value = orderTypeText;
+    document.getElementById('orderDateFormattedInput').value = formattedDate;
+    document.getElementById('orderTimeFormattedInput').value = selectedTimeSlot.label;
 
     // Submit form
     this.submit();
@@ -1399,8 +1744,10 @@
       updateCart();
       updateCartBadge();
       closeCheckout();
+      document.getElementById('checkoutForm').reset();
       document.getElementById('successMessage').classList.remove('show');
       document.getElementById('submitOrderBtn').disabled = false;
+      handleOrderTypeChange(); // Reset form state
     }, 3000);
   });
 

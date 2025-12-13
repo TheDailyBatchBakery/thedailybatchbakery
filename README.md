@@ -33,6 +33,8 @@ This website is deployed on **Netlify** and automatically updates when changes a
 - **HTML5**: Semantic markup
 - **CSS3**: Modern styling with flexbox, grid, and animations
 - **Responsive Design**: Mobile-first approach
+- **Netlify Functions**: Serverless functions for backend operations
+- **Airtable**: User database for cross-device account management
 
 ## 📱 Contact
 

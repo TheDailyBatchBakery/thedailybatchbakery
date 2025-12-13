@@ -79,12 +79,8 @@ exports.handler = async (event, context) => {
       'Zip Code': zipcode
     };
     
-    // Add Created field if it exists in the table (optional)
-    try {
-      fields['Created'] = new Date().toISOString();
-    } catch (e) {
-      // Created field is optional, continue without it
-    }
+    // Note: Created field is optional - only include if it exists in your Airtable table
+    // If you want to track creation dates, add a "Created" field (Date type) in Airtable first
     
     const records = await base('Users').create([{ fields }]);
 

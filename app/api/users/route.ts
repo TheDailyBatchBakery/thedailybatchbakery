@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
       .select()
       .single();
 
-    if (createError) {
+    if (createError || !newUser) {
       console.error('Error creating user:', createError);
       return NextResponse.json(
         { error: 'Failed to create user' },

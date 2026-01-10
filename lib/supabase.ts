@@ -1,8 +1,7 @@
-import { createClient } from '@supabase/supabase-js';
-import { Database } from '@/types/supabase';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 // Server-side Supabase client (uses service role key for admin operations)
-export function createServerClient() {
+export function createServerClient(): SupabaseClient {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
@@ -20,7 +19,7 @@ export function createServerClient() {
     );
   }
 
-  return createClient<Database>(supabaseUrl, supabaseServiceKey, {
+  return createClient(supabaseUrl, supabaseServiceKey, {
     auth: {
       persistSession: false,
     },
@@ -28,7 +27,7 @@ export function createServerClient() {
 }
 
 // Client-side Supabase client (uses anon key)
-export function createClientClient() {
+export function createClientClient(): SupabaseClient {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
@@ -40,6 +39,6 @@ export function createClientClient() {
     );
   }
 
-  return createClient<Database>(supabaseUrl, supabaseAnonKey);
+  return createClient(supabaseUrl, supabaseAnonKey);
 }
 

@@ -48,8 +48,9 @@ export async function sendSMSNotification(
   }
 
   try {
-    const twilio = await import('twilio');
-    const client = twilio.default(
+    const twilioModule = await import('twilio');
+    const Twilio = twilioModule.default || twilioModule;
+    const client = Twilio(
       services.twilio.accountSid,
       services.twilio.authToken
     );

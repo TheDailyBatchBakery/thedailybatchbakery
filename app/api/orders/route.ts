@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
       .select()
       .single();
 
-    if (orderError) {
+    if (orderError || !order) {
       console.error('Error creating order:', orderError);
       return NextResponse.json(
         { error: 'Failed to create order' },
@@ -105,14 +105,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Get user info for notifications
-    const { data: user } = await supabase
+    const { data: user, error: userError } = await supabase
       .from('users')
       .select('*')
       .eq('id', user_id)
       .single();
 
     // Send notifications
-    if (user) {
+    if (user && !userError) {
       // Customer confirmation email
       if (features.emailNotifications && user.email) {
         const emailHtml = generateOrderConfirmationEmail(order, user.name);

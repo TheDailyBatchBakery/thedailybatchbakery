@@ -17,3 +17,11 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Cart sidebar and overlay styles */
+#cartSidebar.open {
+  right: 0 !important;
+}
+
+#cartOverlay.show {
+  display: block !important;
+}

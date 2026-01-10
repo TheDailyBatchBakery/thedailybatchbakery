@@ -1,6 +1,4 @@
 'use client';
-
-import { useEffect } from 'react';
 import Header from '@/components/Header';
 import Navigation from '@/components/Navigation';
 import Hero from '@/components/Hero';

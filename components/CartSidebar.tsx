@@ -34,7 +34,7 @@ export default function CartSidebar() {
       ></div>
       <div
         id="cartSidebar"
-        className="fixed top-0 -right-[400px] w-[400px] max-w-[90%] h-full bg-white shadow-2xl z-50 transition-right duration-300 overflow-y-auto flex flex-col"
+        className="fixed top-0 -right-[400px] w-[400px] max-w-[90%] h-full bg-white shadow-2xl z-50 transition-[right] duration-300 overflow-y-auto flex flex-col"
       >
         <div className="bg-primary-500 text-white p-6 flex justify-between items-center">
           <h2 className="text-2xl m-0">Your Cart</h2>
@@ -110,14 +110,6 @@ export default function CartSidebar() {
           }}
         />
       )}
-      <style jsx>{`
-        #cartSidebar.open {
-          right: 0;
-        }
-        #cartOverlay.show {
-          display: block;
-        }
-      `}</style>
     </>
   );
 }
